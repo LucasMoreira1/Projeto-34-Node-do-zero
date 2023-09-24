@@ -1,0 +1,26 @@
+POST http://localhost:3333/cliente
+Content-Type: application/json
+
+{
+    "nome": "Lucas santos",
+    "email": "lmsferr@outlook.com"
+}
+
+###
+
+
+GET http://localhost:3333/cliente
+
+###
+
+PUT http://localhost:3333/cliente/2
+Content-Type: application/json
+
+{
+    "nome": "Santos Moreira",
+    "email": "lmsferr@outlook.com"
+}
+
+### 
+
+DELETE http://localhost:3333/cliente/3
