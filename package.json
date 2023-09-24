@@ -1,4 +1,7 @@
 {
+  "engines": {
+    "node": ">=14 <15"
+  },
   "name": "projeto-34-node-do-zero",
   "version": "1.0.0",
   "description": "",
