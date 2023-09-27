@@ -1,26 +1,26 @@
-POST http://localhost:3333/cliente
+POST https://node-do-zero-cw7v.onrender.com/cliente
 Content-Type: application/json
 
 {
-    "nome": "Lucas santos",
+    "nome": "Lucas santos ferreira",
     "email": "lmsferr@outlook.com"
 }
 
 ###
 
 
-GET http://localhost:3333/cliente
+GET https://node-do-zero-cw7v.onrender.com/cliente
 
 ###
 
-PUT http://localhost:3333/cliente/2
+PUT https://node-do-zero-cw7v.onrender.com/cliente/5
 Content-Type: application/json
 
 {
-    "nome": "Santos Moreira",
+    "nome": "Santos ferreira",
     "email": "lmsferr@outlook.com"
 }
 
 ### 
 
-DELETE http://localhost:3333/cliente/3
+DELETE https://node-do-zero-cw7v.onrender.com/cliente/4
