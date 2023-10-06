@@ -1,8 +1,15 @@
 import { fastify } from 'fastify'
+import fastifyCors from 'fastify-cors'
 // import { DatabaseMemory } from './database-memory.js'
 import { DatabasePostgres } from './database-postgres.js'
 
 const server = fastify()
+
+server.register(fastifyCors, {
+    // Configurações do CORS
+    origin: 'http://advogadodigital.click/', // Permitir todas as origens (não recomendado para produção)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
+  });
 
 const database = new DatabasePostgres()
 
