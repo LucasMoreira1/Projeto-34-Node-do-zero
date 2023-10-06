@@ -7,7 +7,7 @@ const server = fastify()
 
 server.register(fastifyCors, {
     // Configurações do CORS
-    origin: '*', // Permitir todas as origens (não recomendado para produção)
+    origin: 'http://advogadodigital.click', // Permitir todas as origens (não recomendado para produção)
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
   });
 

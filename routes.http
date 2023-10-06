@@ -1,4 +1,4 @@
-POST https://node-do-zero-cw7v.onrender.com/cliente
+POST https://advogadodigital.onrender.com/cliente
 Content-Type: application/json
 
 {
@@ -9,11 +9,11 @@ Content-Type: application/json
 ###
 
 
-GET https://node-do-zero-cw7v.onrender.com/cliente
+GET https://advogadodigital.onrender.com/cliente
 
 ###
 
-PUT https://node-do-zero-cw7v.onrender.com/cliente/5
+PUT https://advogadodigital.onrender.com/cliente/5
 Content-Type: application/json
 
 {
@@ -23,4 +23,4 @@ Content-Type: application/json
 
 ### 
 
-DELETE https://node-do-zero-cw7v.onrender.com/cliente/4
+DELETE https://advogadodigital.onrender.com/cliente/4
