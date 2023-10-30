@@ -4,32 +4,32 @@ import { sql } from './db.js'
 export class DatabasePostgres {
 
     async list(search) {
-        let clientes
+        let logins
 
         if (search) {
-            clientes = await sql`select * from clientes where nome ilike ${`%` + search + `%`}` 
+            logins = await sql`select * from LOGIN where nome ilike ${`%` + search + `%`}`
         } else {
-            clientes = await sql`select * from clientes`
+            logins = await sql`select * from LOGIN`
         }
 
-        return clientes
+        return logins
     }
 
-    async create(cliente) {
-        const { nome, email} = cliente
+    async create(login) {
+        const { nome, email, tenant, senha } = login
 
-        await sql`insert into clientes (nome, email) values (${nome}, ${email})`
+        await sql`insert into LOGIN (nome, email, tenant, senha) values (${nome}, ${email}, ${tenant}, ${senha})`
     }
 
-    async update(id, cliente) {
-        const {nome,email} = cliente
+    async update(id, login) {
+        const {tenant,nome,email,senha,datacadastro} = login
 
-        await sql`update clientes set nome = ${nome}, email = ${email} WHERE id = ${id}`
+        await sql`update LOGIN set nome = ${nome}, email = ${email} WHERE id = ${id}`
 
     }
 
     async delete(id){
-        await sql`delete from clientes where id = ${id}`
+        await sql`delete from LOGIN where id = ${id}`
     }
 
 }

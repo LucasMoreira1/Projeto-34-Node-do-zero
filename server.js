@@ -13,42 +13,47 @@ server.register(fastifyCors, {
 
 const database = new DatabasePostgres()
 
-server.post('/cliente', async (request, reply) => {
-    const { nome, email } = request.body
+server.post('/login', async (request, reply) => {
+    const { nome, email, tenant, senha } = request.body
 
     await database.create({
         nome,
         email,
+        tenant,
+        senha,
     })
 
     return reply.status(201).send()
 })
 
-server.get('/cliente', async (request) => {
+server.get('/login', async (request) => {
     const search = request.query.search
 
-    const cliente = await database.list(search)
+    const login = await database.list(search)
 
-    return cliente
+    return login
 })
 
-server.put('/cliente/:id', async (request, reply) => {
-    const clienteID = request.params.id
+server.put('/login/:id', async (request, reply) => {
+    const loginID = request.params.id
 
-    const { nome, email } = request.body
+    const { tenant, nome, email, senha, dataCadastro } = request.body
 
-    await database.update(clienteID, {
+    await database.update(loginID, {
+        tenant,
         nome,
         email,
+        senha,
+        dataCadastro,
     })
 
     return reply.status(204).send()
 })
 
-server.delete('/cliente/:id', async (request, reply) => {
-    const clienteID = request.params.id
+server.delete('/login/:id', async (request, reply) => {
+    const loginID = request.params.id
 
-    await database.delete(clienteID)
+    await database.delete(loginID)
 
     return reply.status(204).send()
 })

@@ -1,19 +1,21 @@
-POST https://advogadodigital.onrender.com/cliente
+POST https://advogadodigital.onrender.com/login
 Content-Type: application/json
 
 {
-    "nome": "Lucas santos ferreira",
-    "email": "lmsferr@outlook.com"
+    "nome": "Lucas Moreira",
+    "email": "lucas_moreira@outlook.com",
+    "tenant": "Advocacia",
+    "senha": "123456"
 }
 
 ###
 
 
-GET https://advogadodigital.onrender.com/cliente
+GET https://advogadodigital.onrender.com/login
 
 ###
 
-PUT https://advogadodigital.onrender.com/cliente/5
+PUT https://advogadodigital.onrender.com/login/5
 Content-Type: application/json
 
 {
@@ -23,4 +25,4 @@ Content-Type: application/json
 
 ### 
 
-DELETE https://advogadodigital.onrender.com/cliente/4
+DELETE https://advogadodigital.onrender.com/login/4
