@@ -32,4 +32,9 @@ export class DatabasePostgres {
         await sql`delete from LOGIN where id = ${id}`
     }
 
+    async verificarEmailExistente(email) {
+        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM login WHERE email = ${email})`;
+        return resultado[0].exists;
+    }
+
 }

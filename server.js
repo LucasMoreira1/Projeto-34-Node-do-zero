@@ -58,6 +58,15 @@ server.delete('/login/:id', async (request, reply) => {
     return reply.status(204).send()
 })
 
+server.get('/login/:email', async (request) => {
+    const { email } = request.params;
+
+    // Você pode ajustar esta função conforme necessário com a lógica do seu banco de dados
+    const emailExistente = await database.verificarEmailExistente(email);
+
+    return { existe: emailExistente };
+});
+
 server.listen({
     host: '0.0.0.0',
     port: process.env.PORT ?? 3333,
