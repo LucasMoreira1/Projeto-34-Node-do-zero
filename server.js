@@ -88,8 +88,6 @@ server.post('/login/validacao', async (request, reply) => {
     } else {
         reply.status(401).send({ message: 'Email não cadastrado' });
     }
-    console.log('Email Existente:', emailExistente);
-    console.log('Senha Armazenada:', senhaArmazenada);
 });
 
 
