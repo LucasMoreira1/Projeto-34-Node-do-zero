@@ -76,12 +76,13 @@ server.post('/login/validacao', async (request, reply) => {
     const emailExistente = await database.verificarEmailExistente(email);
 
     if (emailExistente) {
-        // Obter a senha armazenada no banco de dados
-        const senhaArmazenada = await database.obterSenha(email);
+        // Obter informações do usuário do banco de dados
+        const userInfo = await database.obterInformacoesUsuario(email);
 
         // Comparar a senha fornecida com a senha armazenada no banco de dados
-        if (senha === senhaArmazenada) {
-            reply.status(200).send({ message: 'Credenciais válidas' });
+        if (senha === userInfo.senha) {
+            // Credenciais válidas, incluir informações do usuário na resposta
+            reply.status(200).send({ message: 'Credenciais válidas', userInfo });
         } else {
             reply.status(401).send({ message: 'Credenciais inválidas' });
         }

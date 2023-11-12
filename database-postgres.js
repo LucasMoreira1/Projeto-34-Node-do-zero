@@ -48,4 +48,13 @@ export class DatabasePostgres {
         }
     }
 
+    async obterInformacoesUsuario(email) {
+        const resultado = await sql`SELECT tenant, nome, email FROM login WHERE email = ${email}`;
+        if (resultado.length > 0) {
+            return resultado[0];
+        } else {
+            return null;
+        }
+    }
+
 }
