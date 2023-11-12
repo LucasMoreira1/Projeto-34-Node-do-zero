@@ -69,7 +69,7 @@ server.get('/login/:email', async (request) => {
 
 // ...
 
-server.post('/login', async (request, reply) => {
+server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
 
     // Verificar se o email existe no banco de dados
