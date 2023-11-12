@@ -73,14 +73,14 @@ server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
 
     // Verificar se o email existe no banco de dados
-    const emailExistente = await database.verificarEmailExistente(email);
+    const emailExistente = await database.verificarEmailExistente(email.toLowerCase());
 
     if (emailExistente) {
         // Obter informações do usuário do banco de dados
-        const userInfo = await database.obterInformacoesUsuario(email);
+        const userInfo = await database.obterInformacoesUsuario(email.toLowerCase());
 
         // Obter a senha armazenada no banco de dados
-        const senhaArmazenada = await database.obterSenha(email);
+        const senhaArmazenada = await database.obterSenha(email.toLowerCase());
 
         // Comparar a senha fornecida com a senha armazenada no banco de dados
         if (senha === senhaArmazenada) {

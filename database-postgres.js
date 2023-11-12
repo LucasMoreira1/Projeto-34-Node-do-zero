@@ -39,7 +39,8 @@ export class DatabasePostgres {
     }
 
     async obterSenha(email) {
-        const resultado = await sql`SELECT senha FROM login WHERE email = ${email}`;
+        const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
+        const resultado = await sql`SELECT senha FROM login WHERE email = ${emailLowerCase}`;
         if (resultado.length > 0) {
             return resultado[0].senha;
         } else {
