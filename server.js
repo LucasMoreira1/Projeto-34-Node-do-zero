@@ -61,8 +61,8 @@ server.delete('/login/:email', async (request, reply) => {
 server.get('/login/:email', async (request) => {
     const { email } = request.params;
 
-    // Você pode ajustar esta função conforme necessário com a lógica do seu banco de dados
-    const emailExistente = await database.verificarEmailExistente(email);
+    // Converter para minúsculas antes de verificar
+    const emailExistente = await database.verificarEmailExistente(email.toLowerCase());
 
     return { existe: emailExistente };
 });

@@ -33,7 +33,8 @@ export class DatabasePostgres {
     }
 
     async verificarEmailExistente(email) {
-        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM login WHERE email = ${email})`;
+        const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
+        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM login WHERE email = ${emailLowerCase})`;
         return resultado[0].exists;
     }
 
