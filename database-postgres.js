@@ -29,12 +29,22 @@ export class DatabasePostgres {
     }
 
     async delete(id){
-        await sql`delete from LOGIN where id = ${id}`
+        await sql`delete from LOGIN where email = ${id}`
     }
 
     async verificarEmailExistente(email) {
         const resultado = await sql`SELECT EXISTS (SELECT 1 FROM login WHERE email = ${email})`;
         return resultado[0].exists;
+    }
+
+    async obterSenha(email) {
+        const resultado = await sql`SELECT senha FROM login WHERE email = ${email}`;
+        if (resultado.length > 0) {
+            return resultado[0].senha;
+        } else {
+            // Retorne null ou uma string que indique que a senha não foi encontrada
+            return null;
+        }
     }
 
 }

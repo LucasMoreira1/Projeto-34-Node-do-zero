@@ -50,7 +50,7 @@ server.put('/login/:id', async (request, reply) => {
     return reply.status(204).send()
 })
 
-server.delete('/login/:id', async (request, reply) => {
+server.delete('/login/:email', async (request, reply) => {
     const loginID = request.params.id
 
     await database.delete(loginID)
@@ -66,6 +66,30 @@ server.get('/login/:email', async (request) => {
 
     return { existe: emailExistente };
 });
+
+// ...
+
+server.post('/login', async (request, reply) => {
+    const { email, senha } = request.body;
+
+    // Verificar se o email existe no banco de dados
+    const emailExistente = await database.verificarEmailExistente(email);
+
+    if (emailExistente) {
+        // Obter a senha armazenada no banco de dados
+        const senhaArmazenada = await database.obterSenha(email);
+
+        // Comparar a senha fornecida com a senha armazenada no banco de dados
+        if (senha === senhaArmazenada) {
+            reply.status(200).send({ message: 'Credenciais válidas' });
+        } else {
+            reply.status(401).send({ message: 'Credenciais inválidas' });
+        }
+    } else {
+        reply.status(401).send({ message: 'Email não cadastrado' });
+    }
+});
+
 
 server.listen({
     host: '0.0.0.0',
