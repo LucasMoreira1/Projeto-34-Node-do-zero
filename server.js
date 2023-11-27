@@ -116,7 +116,7 @@ server.post('/clientes', async (request, reply) => {
         return reply.status(201).send();
     } catch (error) {
         console.error('Error during database create:', error);
-        return reply.status(500).send({ error: 'Internal Server Error' });
+        return reply.status(500).send({ error: 'Internal Server Error', details: error.stack });
     }
 });
 
