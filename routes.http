@@ -1,9 +1,11 @@
-POST https://advogadodigital.onrender.com/login/validacao
+POST https://advogadodigital.onrender.com/clientes
 Content-Type: application/json
 
 {
-    "email": "lucas_moreira@outlook.com",
-    "senha": "123456"
+    "tenant": "tenant",
+    "nome": "nome",
+    "cpf": "cpf",
+    "estadocivil": "estadocivil"
 }
 
 ###

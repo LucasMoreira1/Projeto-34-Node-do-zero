@@ -97,17 +97,21 @@ server.post('/login/validacao', async (request, reply) => {
 // Clientes
 
 server.post('/clientes', async (request, reply) => {
-    const { tenant, nome, cpf, estadocivil } = request.body
+    const { tenant, nome, cpf, estadocivil } = request.body;
+
+    if (!tenant || !nome || !cpf || !estadocivil) {
+        return reply.status(400).send({ error: 'Missing required fields' });
+    }
 
     await database.create({
         tenant,
         nome,
         cpf,
         estadocivil,
-    })
+    });
 
-    return reply.status(201).send()
-})
+    return reply.status(201).send();
+});
 
 
 server.listen({
