@@ -75,4 +75,16 @@ export class DatabasePostgres {
         await sql`insert into CLIENTES (tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
     }
 
+    async listarCliente(search) {
+        let clientes
+
+        if (search) {
+            clientes = await sql`select * from CLIENTES where nome ilike ${`%` + search + `%`}`
+        } else {
+            clientes = await sql`select * from CLIENTES`
+        }
+
+        return clientes
+    }
+
 }

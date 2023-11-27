@@ -15,13 +15,16 @@ Content-Type: application/json
 
 {
     "tenant": "lucas advogado",
-    "nome": "lucas moreira",
+    "nome": "lucas santos",
     "cpf": "31986903826",
     "estadocivil": "solteiro"
 }
 
 ###
 
+GET http://localhost:3333/clientes
+
+###
 
 GET https://advogadodigital.onrender.com/login
 

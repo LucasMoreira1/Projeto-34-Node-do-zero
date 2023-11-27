@@ -120,6 +120,14 @@ server.post('/clientes', async (request, reply) => {
     }
 });
 
+server.get('/clientes', async (request) => {
+    const search = request.query.search
+
+    const clientes = await database.listarCliente(search)
+
+    return clientes
+})
+
 
 server.listen({
     host: '0.0.0.0',
