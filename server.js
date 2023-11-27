@@ -67,7 +67,7 @@ server.get('/login/:email', async (request) => {
     return { existe: emailExistente };
 });
 
-// ...
+// Login ao sistema.
 
 server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
@@ -93,6 +93,21 @@ server.post('/login/validacao', async (request, reply) => {
         reply.status(401).send({ message: 'Email não cadastrado' });
     }
 });
+
+// Clientes
+
+server.post('/clientes', async (request, reply) => {
+    const { tenant, nome, cpf, estadocivil } = request.body
+
+    await database.create({
+        tenant,
+        nome,
+        cpf,
+        estadocivil,
+    })
+
+    return reply.status(201).send()
+})
 
 
 server.listen({

@@ -58,4 +58,17 @@ export class DatabasePostgres {
         }
     }
 
+    // Clientes
+
+    async verificarCPFExistente(cpf) {
+        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM clientes WHERE cpf = ${cpf})`;
+        return resultado[0].exists;
+    }
+
+    async criarCliente(cliente) {
+        const { tenant, nome, cpf, estadocivil } = cliente
+
+        await sql`insert into CLIENTES (tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`
+    }
+
 }
