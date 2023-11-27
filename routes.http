@@ -2,10 +2,10 @@ POST https://advogadodigital.onrender.com/clientes
 Content-Type: application/json
 
 {
-    "tenant": "tenant",
-    "nome": "nome",
-    "cpf": "cpf",
-    "estadocivil": "estadocivil"
+    "tenant": "lucas advogado",
+    "nome": "lucas moreira",
+    "cpf": "31986903826",
+    "estadocivil": "solteiro"
 }
 
 ###

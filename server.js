@@ -99,18 +99,25 @@ server.post('/login/validacao', async (request, reply) => {
 server.post('/clientes', async (request, reply) => {
     const { tenant, nome, cpf, estadocivil } = request.body;
 
+    console.log('Received request with body:', request.body);
+
     if (!tenant || !nome || !cpf || !estadocivil) {
         return reply.status(400).send({ error: 'Missing required fields' });
     }
 
-    await database.create({
-        tenant,
-        nome,
-        cpf,
-        estadocivil,
-    });
+    try {
+        await database.create({
+            tenant,
+            nome,
+            cpf,
+            estadocivil,
+        });
 
-    return reply.status(201).send();
+        return reply.status(201).send();
+    } catch (error) {
+        console.error('Error during database create:', error);
+        return reply.status(500).send({ error: 'Internal Server Error' });
+    }
 });
 
 
