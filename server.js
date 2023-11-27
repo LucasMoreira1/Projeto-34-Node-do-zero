@@ -106,7 +106,7 @@ server.post('/clientes', async (request, reply) => {
     }
 
     try {
-        await database.create({
+        await database.criarCliente({
             tenant,
             nome,
             cpf,

@@ -10,6 +10,18 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:3333/clientes
+Content-Type: application/json
+
+{
+    "tenant": "lucas advogado",
+    "nome": "lucas moreira",
+    "cpf": "31986903826",
+    "estadocivil": "solteiro"
+}
+
+###
+
 
 GET https://advogadodigital.onrender.com/login
 
