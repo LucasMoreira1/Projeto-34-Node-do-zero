@@ -79,9 +79,9 @@ export class DatabasePostgres {
         let clientes
 
         if (search) {
-            clientes = await sql`select * from CLIENTES where nome ilike ${`%` + search + `%`}`
+            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where nome ilike ${`%` + search + `%`}`
         } else {
-            clientes = await sql`select * from CLIENTES`
+            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES`
         }
 
         return clientes

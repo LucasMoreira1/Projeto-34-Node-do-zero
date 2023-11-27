@@ -26,6 +26,10 @@ GET http://localhost:3333/clientes
 
 ###
 
+GET https://advogadodigital.onrender.com/clientes
+
+###
+
 GET https://advogadodigital.onrender.com/login
 
 ###
