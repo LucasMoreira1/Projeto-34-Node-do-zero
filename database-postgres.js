@@ -75,16 +75,17 @@ export class DatabasePostgres {
         await sql`insert into CLIENTES (tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
     }
 
-    async listarCliente(search) {
-        let clientes
-
+    async listarCliente({ tenant, search }) {
+        let clientes;
+    
         if (search) {
-            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where nome ilike ${`%` + search + `%`}`
+            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where tenant = ${tenant} and nome ilike ${`%` + search + `%`}`;
         } else {
-            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES`
+            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where tenant = ${tenant}`;
         }
-
-        return clientes
+    
+        return clientes;
     }
+    
 
 }
