@@ -126,7 +126,7 @@ server.get('/clientes/:tenant', async (request) => {
     return clientes;
 });
 
-server.post('/login', async (request, reply) => {
+server.post('/login2', async (request, reply) => {
     const { nome, email, tenant, senha } = request.body
 
     await database.create({
@@ -139,7 +139,7 @@ server.post('/login', async (request, reply) => {
     return reply.status(201).send()
 })
 
-server.get('/login', async (request) => {
+server.get('/login2', async (request) => {
     const search = request.query.search
 
     const login = await database.list(search)
@@ -147,7 +147,7 @@ server.get('/login', async (request) => {
     return login
 })
 
-server.put('/login/:id', async (request, reply) => {
+server.put('/login2/:id', async (request, reply) => {
     const loginID = request.params.id
 
     const { tenant, nome, email, senha, dataCadastro } = request.body
@@ -163,7 +163,7 @@ server.put('/login/:id', async (request, reply) => {
     return reply.status(204).send()
 })
 
-server.delete('/login/:email', async (request, reply) => {
+server.delete('/login2/:email', async (request, reply) => {
     const loginID = request.params.id
 
     await database.delete(loginID)
@@ -171,7 +171,7 @@ server.delete('/login/:email', async (request, reply) => {
     return reply.status(204).send()
 })
 
-server.get('/login/:email', async (request) => {
+server.get('/login2/:email', async (request) => {
     const { email } = request.params;
 
     // Converter para minúsculas antes de verificar
@@ -179,10 +179,6 @@ server.get('/login/:email', async (request) => {
 
     return { existe: emailExistente };
 });
-
-
-
-
 
 
 server.listen({

@@ -1,11 +1,23 @@
-POST https://advogadodigital.onrender.com/clientes
+POST https://advogadodigital.onrender.com/login
 Content-Type: application/json
 
 {
-    "tenant": "lucas advogado",
-    "nome": "lucas moreira",
-    "cpf": "31986903826",
-    "estadocivil": "solteiro"
+    "id_tenant":"1",
+    "nome":"Lucas Moreira",
+    "email":"lucas_moreira@outlook.com",
+    "senha":"123456"
+}
+
+###
+
+POST https://advogadodigital.onrender.com/tenant
+Content-Type: application/json
+
+{
+    "nome":"Advogadodigital",
+    "responsavel":"lucas",
+    "email":"lucas@lucas.com",
+    "telefone":"12981559778"
 }
 
 ###
@@ -30,7 +42,7 @@ GET https://advogadodigital.onrender.com/clientes/Lucas Advocacia
 
 ###
 
-GET https://advogadodigital.onrender.com/login
+GET https://advogadodigital.onrender.com/tenant
 
 ###
 
