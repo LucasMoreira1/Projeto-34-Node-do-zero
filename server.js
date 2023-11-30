@@ -25,7 +25,7 @@ server.post('/tenant', async (request, reply) => {
         email,
         telefone
     });
-
+    console.log(response)
     // Envie o ID do novo Tenant como resposta para o frontend
     return reply.status(201).send({ novoTenantId });
 })

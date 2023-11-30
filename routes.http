@@ -14,7 +14,7 @@ POST https://advogadodigital.onrender.com/tenant
 Content-Type: application/json
 
 {
-    "nome":"Advogadodigital",
+    "nome":"Advogaddigital",
     "responsavel":"lucas",
     "email":"lucas@lucas.com",
     "telefone":"12981559778"
