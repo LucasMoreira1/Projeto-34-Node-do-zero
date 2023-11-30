@@ -9,10 +9,10 @@ export class DatabasePostgres {
         const { nome, responsavel, email, telefone } = dadosTenant;
     
         // Adicione a cláusula RETURNING id à sua consulta SQL
-        const resultado = await sql`INSERT INTO TENANT (nome, responsavel, email, telefone) VALUES (${nome}, ${responsavel}, ${email}, ${telefone}) RETURNING id`;
+        const resultado = await sql`INSERT INTO TENANT (nome, responsavel, email, telefone) VALUES (${nome}, ${responsavel}, ${email}, ${telefone}) RETURNING id_tenant`;
     
         // O resultado agora contém o ID retornado
-        const novoTenantId = resultado[0].id;
+        const novoTenantId = resultado[0].id_tenant;
     
         return novoTenantId;
     }
