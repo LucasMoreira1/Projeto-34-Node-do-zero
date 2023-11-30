@@ -126,7 +126,11 @@ server.get('/clientes/:tenant', async (request) => {
     return clientes;
 });
 
+<<<<<<< HEAD
 server.post('/login2', async (request, reply) => {
+=======
+server.post('/login', async (request, reply) => {
+>>>>>>> a6f69334d1b0340e3074f970c968d5aeebed7e41
     const { nome, email, tenant, senha } = request.body
 
     await database.create({
@@ -139,7 +143,11 @@ server.post('/login2', async (request, reply) => {
     return reply.status(201).send()
 })
 
+<<<<<<< HEAD
 server.get('/login2', async (request) => {
+=======
+server.get('/login', async (request) => {
+>>>>>>> a6f69334d1b0340e3074f970c968d5aeebed7e41
     const search = request.query.search
 
     const login = await database.list(search)
@@ -147,7 +155,11 @@ server.get('/login2', async (request) => {
     return login
 })
 
+<<<<<<< HEAD
 server.put('/login2/:id', async (request, reply) => {
+=======
+server.put('/login/:id', async (request, reply) => {
+>>>>>>> a6f69334d1b0340e3074f970c968d5aeebed7e41
     const loginID = request.params.id
 
     const { tenant, nome, email, senha, dataCadastro } = request.body
@@ -163,7 +175,11 @@ server.put('/login2/:id', async (request, reply) => {
     return reply.status(204).send()
 })
 
+<<<<<<< HEAD
 server.delete('/login2/:email', async (request, reply) => {
+=======
+server.delete('/login/:email', async (request, reply) => {
+>>>>>>> a6f69334d1b0340e3074f970c968d5aeebed7e41
     const loginID = request.params.id
 
     await database.delete(loginID)
@@ -171,7 +187,11 @@ server.delete('/login2/:email', async (request, reply) => {
     return reply.status(204).send()
 })
 
+<<<<<<< HEAD
 server.get('/login2/:email', async (request) => {
+=======
+server.get('/login/:email', async (request) => {
+>>>>>>> a6f69334d1b0340e3074f970c968d5aeebed7e41
     const { email } = request.params;
 
     // Converter para minúsculas antes de verificar
@@ -180,6 +200,13 @@ server.get('/login2/:email', async (request) => {
     return { existe: emailExistente };
 });
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> a6f69334d1b0340e3074f970c968d5aeebed7e41
 
 server.listen({
     host: '0.0.0.0',
