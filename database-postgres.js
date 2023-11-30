@@ -32,9 +32,9 @@ export class DatabasePostgres {
         await sql`delete from LOGIN where email = ${id}`
     }
 
-    async verificarEmailExistente(email) {
+    async verificarEmailTenant(email) {
         const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
-        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM login WHERE email = ${emailLowerCase})`;
+        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM tenant WHERE email = ${emailLowerCase})`;
         return resultado[0].exists;
     }
 
@@ -57,6 +57,22 @@ export class DatabasePostgres {
             return null;
         }
     }
+
+    // Tenant (Escritorio)
+
+    async verificarEmailTenant(email) {
+        const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
+        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM tenant WHERE email = ${emailLowerCase})`;
+        return resultado[0].exists;
+    }
+
+    async criarTenant(dadosTenant) {
+        const { nome, responsavel, email, telefone } = dadosTenant
+
+        await sql`insert into TENANT (nome, responsavel, email, telefone) values (${nome}, ${responsavel}, ${email}, ${telefone})`
+    }
+
+
 
     // Clientes
 
@@ -87,5 +103,4 @@ export class DatabasePostgres {
         return clientes;
     }
     
-
 }

@@ -67,6 +67,30 @@ server.get('/login/:email', async (request) => {
     return { existe: emailExistente };
 });
 
+// Tenant do sistema. (Criar escritorios)
+
+server.post('/tenant', async (request, reply) => {
+    const { nome, responsavel, email, telefone } = request.body
+
+    await database.criarTenant({
+        nome,
+        responsavel,
+        email,
+        telefone
+    })
+
+    return reply.status(201).send()
+})
+
+server.get('/tenant/:email', async (request) => {
+    const { email } = request.params;
+
+    // Converter para minúsculas antes de verificar
+    const emailExistente = await database.verificarEmailTenant(email.toLowerCase());
+
+    return { existe: emailExistente };
+});
+
 // Login ao sistema.
 
 server.post('/login/validacao', async (request, reply) => {
