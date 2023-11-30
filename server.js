@@ -16,7 +16,7 @@ const database = new DatabasePostgres()
 // Tenant do sistema. (Criar escritorios)
 
 server.post('/tenant', async (request, reply) => {
-    const { nome, responsavel, email, telefone } = request.body
+    const { nome, responsavel, email, telefone } = request.body;
 
     // Chame a função criarTenant no seu banco de dados e obtenha o ID retornado
     const novoTenantId = await database.criarTenant({
@@ -25,10 +25,10 @@ server.post('/tenant', async (request, reply) => {
         email,
         telefone
     });
-    console.log(response)
+
     // Envie o ID do novo Tenant como resposta para o frontend
     return reply.status(201).send({ novoTenantId });
-})
+});
 
 
 server.get('/tenant/:email', async (request) => {

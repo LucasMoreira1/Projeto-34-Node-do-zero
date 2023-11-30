@@ -6,10 +6,17 @@ export class DatabasePostgres {
     // Tenant (Escritorio)
 
     async criarTenant(dadosTenant) {
-        const { nome, responsavel, email, telefone } = dadosTenant
-
-        await sql`insert into TENANT (nome, responsavel, email, telefone) values (${nome}, ${responsavel}, ${email}, ${telefone})`
+        const { nome, responsavel, email, telefone } = dadosTenant;
+    
+        // Adicione a cláusula RETURNING id à sua consulta SQL
+        const resultado = await sql`INSERT INTO TENANT (nome, responsavel, email, telefone) VALUES (${nome}, ${responsavel}, ${email}, ${telefone}) RETURNING id`;
+    
+        // O resultado agora contém o ID retornado
+        const novoTenantId = resultado[0].id;
+    
+        return novoTenantId;
     }
+    
 
     async verificarEmailTenant(email) {
         const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
