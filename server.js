@@ -13,60 +13,6 @@ server.register(fastifyCors, {
 
 const database = new DatabasePostgres()
 
-server.post('/login', async (request, reply) => {
-    const { nome, email, tenant, senha } = request.body
-
-    await database.create({
-        nome,
-        email,
-        tenant,
-        senha,
-    })
-
-    return reply.status(201).send()
-})
-
-server.get('/login', async (request) => {
-    const search = request.query.search
-
-    const login = await database.list(search)
-
-    return login
-})
-
-server.put('/login/:id', async (request, reply) => {
-    const loginID = request.params.id
-
-    const { tenant, nome, email, senha, dataCadastro } = request.body
-
-    await database.update(loginID, {
-        tenant,
-        nome,
-        email,
-        senha,
-        dataCadastro,
-    })
-
-    return reply.status(204).send()
-})
-
-server.delete('/login/:email', async (request, reply) => {
-    const loginID = request.params.id
-
-    await database.delete(loginID)
-
-    return reply.status(204).send()
-})
-
-server.get('/login/:email', async (request) => {
-    const { email } = request.params;
-
-    // Converter para minúsculas antes de verificar
-    const emailExistente = await database.verificarEmailExistente(email.toLowerCase());
-
-    return { existe: emailExistente };
-});
-
 // Tenant do sistema. (Criar escritorios)
 
 server.post('/tenant', async (request, reply) => {
@@ -91,7 +37,34 @@ server.get('/tenant/:email', async (request) => {
     return { existe: emailExistente };
 });
 
-// Login ao sistema.
+// FIM TENANT
+
+// Login do sistema.
+
+server.post('/login', async (request, reply) => {
+    const { id_tenant, nome, email, senha } = request.body
+
+    await database.criarLogin({
+        id_tenant,
+        nome,
+        email,
+        senha
+    })
+
+    return reply.status(201).send()
+})
+
+server.get('/login/:email', async (request) => {
+    const { email } = request.params;
+
+    // Converter para minúsculas antes de verificar
+    const emailExistente = await database.verificarEmailLogin(email.toLowerCase());
+
+    return { existe: emailExistente };
+});
+
+
+
 
 server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
@@ -152,6 +125,64 @@ server.get('/clientes/:tenant', async (request) => {
 
     return clientes;
 });
+
+server.post('/login', async (request, reply) => {
+    const { nome, email, tenant, senha } = request.body
+
+    await database.create({
+        nome,
+        email,
+        tenant,
+        senha,
+    })
+
+    return reply.status(201).send()
+})
+
+server.get('/login', async (request) => {
+    const search = request.query.search
+
+    const login = await database.list(search)
+
+    return login
+})
+
+server.put('/login/:id', async (request, reply) => {
+    const loginID = request.params.id
+
+    const { tenant, nome, email, senha, dataCadastro } = request.body
+
+    await database.update(loginID, {
+        tenant,
+        nome,
+        email,
+        senha,
+        dataCadastro,
+    })
+
+    return reply.status(204).send()
+})
+
+server.delete('/login/:email', async (request, reply) => {
+    const loginID = request.params.id
+
+    await database.delete(loginID)
+
+    return reply.status(204).send()
+})
+
+server.get('/login/:email', async (request) => {
+    const { email } = request.params;
+
+    // Converter para minúsculas antes de verificar
+    const emailExistente = await database.verificarEmailExistente(email.toLowerCase());
+
+    return { existe: emailExistente };
+});
+
+
+
+
 
 
 server.listen({
