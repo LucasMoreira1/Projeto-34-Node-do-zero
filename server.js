@@ -18,15 +18,18 @@ const database = new DatabasePostgres()
 server.post('/tenant', async (request, reply) => {
     const { nome, responsavel, email, telefone } = request.body
 
-    await database.criarTenant({
+    // Chame a função criarTenant no seu banco de dados e obtenha o ID retornado
+    const novoTenantId = await database.criarTenant({
         nome,
         responsavel,
         email,
         telefone
-    })
+    });
 
-    return reply.status(201).send()
+    // Envie o ID do novo Tenant como resposta para o frontend
+    return reply.status(201).send({ novoTenantId });
 })
+
 
 server.get('/tenant/:email', async (request) => {
     const { email } = request.params;
