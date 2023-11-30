@@ -38,7 +38,7 @@ server.get('/tenant/:email', async (request) => {
 });
 
 // FIM TENANT
-
+ 
 // Login do sistema.
 
 server.post('/login', async (request, reply) => {
