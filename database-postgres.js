@@ -12,7 +12,7 @@ export class DatabasePostgres {
         const resultado = await sql`INSERT INTO TENANT (nome, responsavel, email, telefone) VALUES (${nome}, ${responsavel}, ${email}, ${telefone}) RETURNING id_tenant`;
     
         // O resultado agora contém o ID retornado
-        const novoTenantId = resultado[0].id;
+        const novoTenantId = resultado[0]
     
         return novoTenantId;
     }
