@@ -40,6 +40,19 @@ export class DatabasePostgres {
         return resultado[0].exists;
     }
 
+    // Validacao Login
+
+    async obterInformacoesUsuario(email) {
+        const userInfo = await sql`SELECT id_login, nome, email, tenant FROM login WHERE email = ${email}`;
+        return userInfo[0];
+    }
+
+    async obterSenha(email, tenant) {
+        const senha = await sql`SELECT senha FROM login WHERE email = ${email}`;
+        return senha[0].senha;
+    }
+
+
     // Clientes
 
     async verificarCPFExistente(cpf) {

@@ -73,7 +73,7 @@ server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
 
     // Verificar se o email existe no banco de dados
-    const emailExistente = await database.verificarEmailExistente(email.toLowerCase());
+    const emailExistente = await database.verificarEmailLogin(email.toLowerCase());
 
     if (emailExistente) {
         // Obter informações do usuário do banco de dados
