@@ -79,10 +79,10 @@ server.post('/login/validacao', async (request, reply) => {
         // Obter informações do usuário do banco de dados
         const userInfo = await database.obterInformacoesUsuario(email.toLowerCase());
 
-        if (userInfo.length > 0) {
-            const nomeTenant = await database.obterNomeTenantPorID(userInfo[0].id_tenant);
-            userInfo[0].nomeTenant = nomeTenant; // Adiciona o nome do tenant às informações do usuário
-        }
+        id_tenant = userInfo.id_tenant;
+
+        // Obter informações do tenant
+        const tenantInfo = await database.obterInformacoesTenant(id_tenant)
 
         // Obter a senha armazenada no banco de dados
         const senhaArmazenada = await database.obterSenha(email.toLowerCase());
@@ -90,7 +90,7 @@ server.post('/login/validacao', async (request, reply) => {
         // Comparar a senha fornecida com a senha armazenada no banco de dados
         if (senha === senhaArmazenada) {
             // Credenciais válidas, incluir informações do usuário na resposta
-            reply.status(200).send({ message: 'Credenciais válidas', userInfo });
+            reply.status(200).send({ message: 'Credenciais válidas', userInfo, tenantInfo });
         } else {
             reply.status(401).send({ message: 'Credenciais inválidas' });
         }
