@@ -85,7 +85,7 @@ server.post('/login/validacao', async (request, reply) => {
         // Comparar a senha fornecida com a senha armazenada no banco de dados
         if (senha === senhaArmazenada) {
             // Credenciais válidas, incluir informações do usuário na resposta
-            reply.status(200).send({ message: 'Credenciais válidas', userInfo, tenantInfo });
+            reply.status(200).send({ message: 'Credenciais válidas', userInfo });
         } else {
             reply.status(401).send({ message: 'Credenciais inválidas' });
         }
