@@ -43,7 +43,7 @@ export class DatabasePostgres {
     // Validacao Login
 
     async obterInformacoesUsuario(email) {
-        const userInfo = await sql`SELECT id_login, nome, email, tenant FROM login WHERE email = ${email}`;
+        const userInfo = await sql`SELECT id_login, nome, email, id_tenant FROM login WHERE email = ${email}`;
         return userInfo[0];
     }
 
