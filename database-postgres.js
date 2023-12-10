@@ -46,7 +46,7 @@ export class DatabasePostgres {
         const userInfo = await sql`SELECT l.id_tenant, l.id_login, l.nome, l.email, t.nome as nomeTenant, t.responsavel, t.telefone FROM login l
                                   JOIN tenant t ON l.id_tenant = t.id_tenant
                                   WHERE l.email = ${email}`;
-        return userInfo[0].exists;
+        return userInfo[0];
     }
 
     async obterSenha(email) {
