@@ -42,14 +42,19 @@ export class DatabasePostgres {
 
     // Validacao Login
 
+    async obterNomeTenantPorID(idTenant) {
+        const nomeTenant = await sql`SELECT nome FROM tenant WHERE id_tenant = ${idTenant}`;
+        return nomeTenant[0].nome;
+    }
+
     async obterInformacoesUsuario(email) {
         const userInfo = await sql`SELECT id_tenant, id_login, nome, email FROM login WHERE email = ${email}`;
         
         if (userInfo.length > 0) {
-            const nomeTenant = await obterNomeTenantPorID(userInfo[0].id_tenant);
+            const nomeTenant = await database.obterNomeTenantPorID(userInfo[0].id_tenant);
             userInfo[0].nomeTenant = nomeTenant; // Adiciona o nome do tenant às informações do usuário
         }
-    
+        
         return userInfo[0];
     }
 
@@ -57,12 +62,6 @@ export class DatabasePostgres {
         const senha = await sql`SELECT senha FROM login WHERE email = ${email}`;
         return senha[0].senha;
     }
-
-    async obterNomeTenantPorID(idTenant) {
-        const nomeTenant = await sql`SELECT nome FROM tenant WHERE id_tenant = ${idTenant}`;
-        return nomeTenant[0].nome;
-    }
-
 
     // Clientes
 
