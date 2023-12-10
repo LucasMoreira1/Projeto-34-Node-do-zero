@@ -1,9 +1,7 @@
-POST https://advogadodigital.onrender.com/login
+POST https://advogadodigital.onrender.com/login/validacao
 Content-Type: application/json
 
 {
-    "id_tenant":"43",
-    "nome":"Lucas Moreira",
     "email":"lucas_moreira@outlook.com",
     "senha":"123456"
 }
