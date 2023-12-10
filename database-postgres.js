@@ -51,10 +51,10 @@ export class DatabasePostgres {
         const userInfo = await sql`SELECT id_tenant, id_login, nome, email FROM login WHERE email = ${email}`;
         
         if (userInfo.length > 0) {
-            const nomeTenant = await database.obterNomeTenantPorID(userInfo[0].id_tenant);
+            const nomeTenant = await this.dbInstance.obterNomeTenantPorID(userInfo[0].id_tenant);
             userInfo[0].nomeTenant = nomeTenant; // Adiciona o nome do tenant às informações do usuário
         }
-        
+
         return userInfo[0];
     }
 
