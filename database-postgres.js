@@ -61,22 +61,22 @@ export class DatabasePostgres {
     }
 
     async criarCliente(cliente) {
-        const { tenant, nome, cpf, estadocivil } = cliente;
+        const { id_tenant, nome, cpf, estadocivil } = cliente;
     
-        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
+        if (id_tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
             throw new Error('Undefined values are not allowed');
         }
     
-        await sql`insert into CLIENTES (tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
+        await sql`insert into CLIENTES (id_tenant, nome, cpf, estadocivil) values (${id_tenant}, ${nome}, ${cpf}, ${estadocivil})`;
     }
 
-    async listarCliente({ tenant, search }) {
+    async listarCliente({ id_tenant, search }) {
         let clientes;
     
         if (search) {
-            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where tenant = ${tenant} and nome ilike ${`%` + search + `%`}`;
+            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where id_tenant = ${id_tenant} and nome ilike ${`%` + search + `%`}`;
         } else {
-            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where tenant = ${tenant}`;
+            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where id_tenant = ${id_tenant}`;
         }
     
         return clientes;
@@ -95,13 +95,13 @@ export class DatabasePostgres {
     }
 
     async create(login) {
-        const { nome, email, tenant, senha } = login
+        const { nome, email, id_tenant, senha } = login
 
-        await sql`insert into LOGIN (nome, email, tenant, senha) values (${nome}, ${email}, ${tenant}, ${senha})`
+        await sql`insert into LOGIN (nome, email, id_tenant, senha) values (${nome}, ${email}, ${id_tenant}, ${senha})`
     }
 
     async update(id, login) {
-        const {tenant,nome,email,senha,datacadastro} = login
+        const {id_tenant,nome,email,senha,datacadastro} = login
 
         await sql`update LOGIN set nome = ${nome}, email = ${email} WHERE id = ${id}`
 
@@ -122,17 +122,6 @@ export class DatabasePostgres {
             // Retorne null ou uma string que indique que a senha não foi encontrada
             return null;
         }
-    }
-
-    async obterInformacoesUsuario(email) {
-        const resultado = await sql`SELECT tenant, nome, email FROM login WHERE email = ${email}`;
-        if (resultado.length > 0) {
-            return resultado[0];
-        } else {
-            return null;
-        }
-    }
-
-    
+    } 
     
 }
