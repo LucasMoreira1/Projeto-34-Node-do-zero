@@ -47,7 +47,7 @@ export class DatabasePostgres {
         return userInfo[0];
     }
 
-    async obterSenha(email, tenant) {
+    async obterSenha(email) {
         const senha = await sql`SELECT senha FROM login WHERE email = ${email}`;
         return senha[0].senha;
     }
