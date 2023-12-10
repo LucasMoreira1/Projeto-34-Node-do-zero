@@ -42,10 +42,10 @@ export class DatabasePostgres {
 
     // Validacao Login
 
-    async obterNomeTenantPorID(idTenant) {
-        const nomeTenant = await sql`SELECT nome FROM tenant WHERE id_tenant = ${idTenant}`;
-        return nomeTenant[0].nome;
-    }
+    // async obterNomeTenantPorID(idTenant) {
+    //     const nomeTenant = await sql`SELECT nome FROM tenant WHERE id_tenant = ${idTenant}`;
+    //     return nomeTenant[0].nome;
+    // }
 
     async obterInformacoesUsuario(email) {
         const userInfo = await sql`SELECT id_tenant, id_login, nome, email FROM login WHERE email = ${email}`;

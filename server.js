@@ -79,10 +79,10 @@ server.post('/login/validacao', async (request, reply) => {
         // Obter informações do usuário do banco de dados
         const userInfo = await database.obterInformacoesUsuario(email.toLowerCase());
 
-        if (userInfo.length > 0) {
-            const nomeTenant = await database.obterNomeTenantPorID(userInfo[0].id_tenant);
-            userInfo[0].nomeTenant = nomeTenant; // Adiciona o nome do tenant às informações do usuário
-        }
+        // if (userInfo.length > 0) {
+        //     const nomeTenant = await database.obterNomeTenantPorID(userInfo[0].id_tenant);
+        //     userInfo[0].nomeTenant = nomeTenant; // Adiciona o nome do tenant às informações do usuário
+        // }
 
         // Obter a senha armazenada no banco de dados
         const senhaArmazenada = await database.obterSenha(email.toLowerCase());
