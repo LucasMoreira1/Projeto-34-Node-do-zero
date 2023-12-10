@@ -43,15 +43,26 @@ export class DatabasePostgres {
     // Validacao Login
 
     async obterInformacoesUsuario(email) {
-        const userInfo = await sql`SELECT id_tenant, id_login, nome, email FROM login WHERE email = ${email}`;
-        return userInfo[0];
-    }
+        const userInfo = await sql`SELECT l.id_tenant, l.id_login, l.nome, l.email, t.nome as nomeTenant, t.responsavel, t.telefone FROM login l
+                                  JOIN tenant t ON l.id_tenant = t.id_tenant
+                                  WHERE l.email = ${email}`;
 
-    async obterInformacoesTenant(id_tenant) {
-        const tenantInfo = await sql`SELECT id_tenant, nome, responsavel, telefone, email FROM tenant WHERE id_tenant = ${id_tenant}`;
-        return tenantInfo[0];
-    }
+        if (userInfo.length > 0) {
+            const tenantInfo = {
+                id_tenant: userInfo[0].id_tenant,
+                id_login: userInfo[0].id_login,
+                nome: userInfo[0].nome,
+                email: userInfo[0].email,
+                nomeTenant: userInfo[0].nomeTenant,
+                responsavel: userInfo[0].responsavel,
+                telefone: userInfo[0].telefone
+            };
 
+        return tenantInfo;
+        } else {
+            return null; // ou outro valor que faz sentido para indicar que não há informações de usuário
+        }
+    }
 
     async obterSenha(email) {
         const senha = await sql`SELECT senha FROM login WHERE email = ${email}`;

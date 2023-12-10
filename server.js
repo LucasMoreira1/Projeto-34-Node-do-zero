@@ -79,11 +79,6 @@ server.post('/login/validacao', async (request, reply) => {
         // Obter informações do usuário do banco de dados
         const userInfo = await database.obterInformacoesUsuario(email.toLowerCase());
 
-        id_tenant = userInfo.id_tenant;
-
-        // Obter informações do tenant
-        const tenantInfo = await database.obterInformacoesTenant(id_tenant)
-
         // Obter a senha armazenada no banco de dados
         const senhaArmazenada = await database.obterSenha(email.toLowerCase());
 
