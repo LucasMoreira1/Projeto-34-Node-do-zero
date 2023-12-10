@@ -46,22 +46,7 @@ export class DatabasePostgres {
         const userInfo = await sql`SELECT l.id_tenant, l.id_login, l.nome, l.email, t.nome as nomeTenant, t.responsavel, t.telefone FROM login l
                                   JOIN tenant t ON l.id_tenant = t.id_tenant
                                   WHERE l.email = ${email}`;
-
-        if (userInfo.length > 0) {
-            const tenantInfo = {
-                id_tenant: userInfo[0].id_tenant,
-                id_login: userInfo[0].id_login,
-                nome: userInfo[0].nome,
-                email: userInfo[0].email,
-                nomeTenant: userInfo[0].nomeTenant,
-                responsavel: userInfo[0].responsavel,
-                telefone: userInfo[0].telefone
-            };
-
-        return tenantInfo;
-        } else {
-            return null; // ou outro valor que faz sentido para indicar que não há informações de usuário
-        }
+        return userInfo[0].senha;
     }
 
     async obterSenha(email) {
