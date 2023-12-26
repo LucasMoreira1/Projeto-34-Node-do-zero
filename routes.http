@@ -32,11 +32,11 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3333/clientes
+POST https://advogadodigital.onrender.com/clientes
 Content-Type: application/json
 
 {
-    "tenant": "lucas advogado",
+    "tenant": "1",
     "nome": "lucas santos",
     "cpf": "31986903826",
     "estadocivil": "solteiro"

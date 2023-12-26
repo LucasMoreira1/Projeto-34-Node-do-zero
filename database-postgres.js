@@ -62,13 +62,13 @@ export class DatabasePostgres {
     }
 
     async criarCliente(cliente) {
-        const { id_tenant, nome, cpf, estadocivil } = cliente;
+        const { tenant, nome, cpf, estadocivil } = cliente;
     
-        if (id_tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
+        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
             throw new Error('Undefined values are not allowed');
         }
     
-        await sql`insert into CLIENTES (id_tenant, nome, cpf, estadocivil) values (${id_tenant}, ${nome}, ${cpf}, ${estadocivil})`;
+        await sql`insert into CLIENTES (id_tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
     }
 
     async atualizarProximoIDClientesAux(tenant) {
