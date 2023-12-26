@@ -106,6 +106,9 @@ server.post('/clientes', async (request, reply) => {
     }
 
     try {
+        // Atualizar próximo ID na tabela clientes_aux
+        await database.atualizarProximoIDClientesAux(tenant);
+
         // Obtém o próximo ID para o tenant da tabela clientes_aux
         const nextIdResult = await database.obterNextIdCliente(tenant);
         const nextId = nextIdResult.next_id;
@@ -119,15 +122,13 @@ server.post('/clientes', async (request, reply) => {
             estadocivil,
         });
 
-        // Atualizar próximo ID na tabela clientes_aux
-        await database.atualizarProximoIDClientesAux(tenant);
-
-        return reply.status(201).send({ clienteID });
+        return reply.status(201).send({ clienteID: nextId });
     } catch (error) {
         console.error('Erro durante a criação no banco de dados:', error);
         return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
     }
 });
+
 
 server.get('/clientes/:tenant', async (request) => {
     const { search } = request.query;
