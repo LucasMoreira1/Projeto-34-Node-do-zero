@@ -62,14 +62,21 @@ export class DatabasePostgres {
     }
 
     async criarCliente(cliente) {
-        const { tenant, nome, cpf, estadocivil } = cliente;
+        const { tenant, nome, cpf, estadocivil, id_cliente } = cliente;
     
         if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
-            throw new Error('Undefined values are not allowed');
+            throw new Error('Missing required values');
         }
     
-        await sql`insert into CLIENTES (id_tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
+        // Se o id_cliente for fornecido, incluí-lo na inserção
+        if (id_cliente !== undefined) {
+            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil})`;
+        } else {
+            // Caso contrário, deixar o banco de dados gerar o id_cliente automaticamente
+            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
+        }
     }
+    
 
     async obterNextIdCliente(tenant) {
         const nextIdResult = await sql`SELECT next_id FROM clientes_aux WHERE id_tenant = ${tenant}`;
