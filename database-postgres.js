@@ -71,21 +71,23 @@ export class DatabasePostgres {
         await sql`insert into CLIENTES (id_tenant, nome, cpf, estadocivil) values (${id_tenant}, ${nome}, ${cpf}, ${estadocivil})`;
     }
 
-    async listarCliente({ id_tenant, search }) {
+    async atualizarProximoIDClientesAux(tenant) {
+        await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
+    }
+
+    async listarCliente({ tenant, search }) {
         let clientes;
     
         if (search) {
-            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where id_tenant = ${id_tenant} and nome ilike ${`%` + search + `%`}`;
+            clientes = await sql`select id_cliente, nome, cpf, estadocivil from CLIENTES where id_tenant = ${tenant} and nome ilike ${`%` + search + `%`}`;
         } else {
-            clientes = await sql`select clientid, nome, cpf, estadocivil from CLIENTES where id_tenant = ${id_tenant}`;
+            clientes = await sql`select id_cliente, nome, cpf, estadocivil from CLIENTES where id_tenant = ${tenant}`;
         }
     
         return clientes;
     }
 
-    async atualizarProximoIDClientesAux(tenant) {
-        await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
-    }
+    
 
     async list(search) {
         let logins
