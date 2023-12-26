@@ -72,7 +72,16 @@ export class DatabasePostgres {
     }
 
     async atualizarProximoIDClientesAux(tenant) {
-        await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
+        // Verificar se há uma linha correspondente ao tenant na tabela clientes_aux
+        const existente = await sql`SELECT 1 FROM clientes_aux WHERE id_tenant = ${tenant}`;
+    
+        if (existente.length === 0) {
+            // Se não existir, criar uma nova linha
+            await sql`INSERT INTO clientes_aux (id_tenant, next_id) VALUES (${tenant}, 1)`;
+        } else {
+            // Se já existir, atualizar o próximo ID
+            await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
+        }
     }
 
     async listarCliente({ tenant, search }) {
