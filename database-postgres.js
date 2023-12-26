@@ -91,8 +91,8 @@ export class DatabasePostgres {
             // Se não existir, criar uma nova linha com next_id igual a 1
             await sql`INSERT INTO clientes_aux (id_tenant, next_id) VALUES (${tenant}, 1)`;
         } else {
-            // Se já existir, não é necessário atualizar o próximo ID aqui
-            // pois isso será feito no momento da criação de um novo cliente
+            // Se já existir, atualizar o próximo ID
+            await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
         }
     }
     
