@@ -106,17 +106,21 @@ server.post('/clientes', async (request, reply) => {
     }
 
     try {
-        await database.criarCliente({
+        // Criar cliente na tabela clientes
+        const clienteID = await database.criarCliente({
             tenant,
             nome,
             cpf,
             estadocivil,
         });
 
-        return reply.status(201).send();
+        // Atualizar próximo ID na tabela clientes_aux
+        await database.atualizarProximoIDClientesAux(tenant);
+
+        return reply.status(201).send({ clienteID });
     } catch (error) {
-        console.error('Error during database create:', error);
-        return reply.status(500).send({ error: 'Internal Server Error', details: error.stack });
+        console.error('Erro durante a criação no banco de dados:', error);
+        return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
     }
 });
 

@@ -83,6 +83,10 @@ export class DatabasePostgres {
         return clientes;
     }
 
+    async atualizarProximoIDClientesAux(tenant) {
+        await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
+    }
+
     async list(search) {
         let logins
 
