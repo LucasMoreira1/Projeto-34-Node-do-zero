@@ -71,18 +71,24 @@ export class DatabasePostgres {
         await sql`insert into CLIENTES (id_tenant, nome, cpf, estadocivil) values (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
     }
 
+    async obterNextIdCliente(tenant) {
+        const nextIdResult = await sql`SELECT next_id FROM clientes_aux WHERE id_tenant = ${tenant}`;
+        return nextIdResult[0];
+    }
+
     async atualizarProximoIDClientesAux(tenant) {
         // Verificar se há uma linha correspondente ao tenant na tabela clientes_aux
         const existente = await sql`SELECT 1 FROM clientes_aux WHERE id_tenant = ${tenant}`;
     
         if (existente.length === 0) {
-            // Se não existir, criar uma nova linha
-            await sql`INSERT INTO clientes_aux (id_tenant, next_id) VALUES (${tenant}, 1)`;
+            // Se não existir, criar uma nova linha com next_id igual a 1
+            await sql`INSERT INTO clientes_aux (id_tenant, next_id) VALUES (${tenant}, 2)`;
         } else {
-            // Se já existir, atualizar o próximo ID
-            await sql`UPDATE clientes_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
+            // Se já existir, não é necessário atualizar o próximo ID aqui
+            // pois isso será feito no momento da criação de um novo cliente
         }
     }
+    
 
     async listarCliente({ tenant, search }) {
         let clientes;

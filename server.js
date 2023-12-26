@@ -106,9 +106,14 @@ server.post('/clientes', async (request, reply) => {
     }
 
     try {
-        // Criar cliente na tabela clientes
-        const clienteID = await database.criarCliente({
+        // Obtém o próximo ID para o tenant da tabela clientes_aux
+        const nextIdResult = await database.obterNextIdCliente(tenant);
+        const nextId = nextIdResult.next_id;
+
+        // Cria o cliente com o próximo ID
+        await database.criarCliente({
             tenant,
+            id_cliente: nextId,
             nome,
             cpf,
             estadocivil,
