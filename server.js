@@ -66,8 +66,7 @@ server.get('/login/:email', async (request) => {
     return { existe: emailExistente };
 });
 
-
-
+// Validacao Login
 
 server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
@@ -96,6 +95,7 @@ server.post('/login/validacao', async (request, reply) => {
 
 // Clientes
 
+// Create
 server.post('/clientes', async (request, reply) => {
     const { tenant, nome, cpf, estadocivil } = request.body;
 
@@ -129,7 +129,7 @@ server.post('/clientes', async (request, reply) => {
     }
 });
 
-
+// Read
 server.get('/clientes/:tenant', async (request) => {
     const { search } = request.query;
     const { tenant } = request.params;
@@ -139,26 +139,25 @@ server.get('/clientes/:tenant', async (request) => {
     return clientes;
 });
 
-server.post('/login2', async (request, reply) => {
-    const { nome, email, tenant, senha } = request.body
+// Update
 
-    await database.create({
-        nome,
-        email,
+server.put('/clientes/:id', async (request, reply) => {
+    const clienteID = request.params.id
+
+    const { tenant, id_cliente, nome, cpf, estadocivil } = request.body
+
+    await database.update(clienteID, {
         tenant,
-        senha,
+        id_cliente,
+        nome,
+        cpf,
+        estadocivil,
     })
 
-    return reply.status(201).send()
+    return reply.status(204).send()
 })
 
-server.get('/login2', async (request) => {
-    const search = request.query.search
-
-    const login = await database.list(search)
-
-    return login
-})
+////////////////////////////////////////////////////////////////
 
 server.put('/login2/:id', async (request, reply) => {
     const loginID = request.params.id

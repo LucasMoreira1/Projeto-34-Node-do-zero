@@ -76,6 +76,17 @@ export class DatabasePostgres {
             await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
         }
     }
+
+    async updateCliente(cliente) {
+        const { tenant, nome, cpf, estadocivil, id_cliente } = cliente;
+    
+        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
+            throw new Error('Missing required values');
+        }
+
+        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil} WHERE tenant = '${tenant}' AND id_cliente = '${id_cliente}`;
+        
+    }
     
 
     async obterNextIdCliente(tenant) {
