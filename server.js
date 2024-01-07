@@ -146,14 +146,32 @@ server.put('/clientes/:id', async (request, reply) => {
 
     const { tenant, nome, cpf, estadocivil } = request.body
 
-    await database.updateCliente(clienteID, {
-        tenant,
-        nome,
-        cpf,
-        estadocivil,
-    })
+    // await database.updateCliente(clienteID, {
+    //     tenant,
+    //     nome,
+    //     cpf,
+    //     estadocivil,
+    // })
 
-    return reply.status(204).send()
+    // return reply.status(204).send()
+
+    if (!tenant || !nome || !cpf || !estadocivil) {
+        return reply.status(400).send({ error: 'Missing required fields' });
+    }
+
+    try {
+        await database.updateCliente(clienteID, {
+            tenant,
+            nome,
+            cpf,
+            estadocivil,
+        })
+
+        return reply.status(204).send()
+    } catch (error) {
+        console.error('Erro durante a atualização no banco de dados:', error);
+        return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
+    }
 })
 
 ////////////////////////////////////////////////////////////////
