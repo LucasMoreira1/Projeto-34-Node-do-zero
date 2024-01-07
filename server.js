@@ -167,7 +167,7 @@ server.put('/clientes/:id', async (request, reply) => {
             estadocivil,
         })
 
-        return reply.status(204).send()
+        return reply.status(201).send()
     } catch (error) {
         console.error('Erro durante a atualização no banco de dados:', error);
         return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
