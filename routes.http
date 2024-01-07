@@ -56,13 +56,13 @@ GET https://advogadodigital.onrender.com/tenant
 
 ###
 
-PUT https://advogadodigital.onrender.com/clientes/7
+PUT https://advogadodigital.onrender.com/clientes/11
 Content-Type: application/json
 
 {
     "cpf": "31986903826",
     "estadocivil": "solteiro",
-    "nome": "lucas santos",
+    "nome": "lucas santos mo",
     "tenant": "1"
 }
 

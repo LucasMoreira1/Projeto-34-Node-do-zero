@@ -1,6 +1,5 @@
 import { fastify } from 'fastify'
 import fastifyCors from '@fastify/cors'
-// import { DatabaseMemory } from './database-memory.js'
 import { DatabasePostgres } from './database-postgres.js'
 
 const server = fastify()
@@ -174,41 +173,19 @@ server.put('/clientes/:id', async (request, reply) => {
     }
 })
 
+// Delete
+
+server.delete('/clientes/:id', async (request, reply) => {
+    
+    const clienteID = request.params.id
+    const { tenant } = request.body
+
+    await database.deleteCliente(clienteID, tenant)
+
+    return reply.status(204).send()
+})
+
 ////////////////////////////////////////////////////////////////
-
-server.put('/login2/:id', async (request, reply) => {
-    const loginID = request.params.id
-
-    const { tenant, nome, email, senha, dataCadastro } = request.body
-
-    await database.update(loginID, {
-        tenant,
-        nome,
-        email,
-        senha,
-        dataCadastro,
-    })
-
-    return reply.status(204).send()
-})
-
-server.delete('/login2/:email', async (request, reply) => {
-    const loginID = request.params.id
-
-    await database.delete(loginID)
-
-    return reply.status(204).send()
-})
-
-server.get('/login2/:email', async (request) => {
-    const { email } = request.params;
-
-    // Converter para minúsculas antes de verificar
-    const emailExistente = await database.verificarEmailExistente(email.toLowerCase());
-
-    return { existe: emailExistente };
-});
-
 
 server.listen({
     host: '0.0.0.0',

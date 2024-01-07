@@ -120,38 +120,9 @@ export class DatabasePostgres {
         return clientes;
     }
 
-    
-
-    async list(search) {
-        let logins
-
-        if (search) {
-            logins = await sql`select * from LOGIN where nome ilike ${`%` + search + `%`}`
-        } else {
-            logins = await sql`select * from LOGIN`
-        }
-
-        return logins
+    async deleteCliente(id, tenant){
+        await sql`delete from CLIENTES where id_cliente = ${id} and id_tenant = ${tenant}`;
     }
-
-    async create(login) {
-        const { nome, email, id_tenant, senha } = login
-
-        await sql`insert into LOGIN (nome, email, id_tenant, senha) values (${nome}, ${email}, ${id_tenant}, ${senha})`
-    }
-
-    async update(id, login) {
-        const {id_tenant,nome,email,senha,datacadastro} = login
-
-        await sql`update LOGIN set nome = ${nome}, email = ${email} WHERE id = ${id}`
-
-    }
-
-    async delete(id){
-        await sql`delete from LOGIN where email = ${id}`
-    }
-
-    
 
     async obterSenha(email) {
         const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
