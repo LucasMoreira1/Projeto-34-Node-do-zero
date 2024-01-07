@@ -144,11 +144,10 @@ server.get('/clientes/:tenant', async (request) => {
 server.put('/clientes/:id', async (request, reply) => {
     const clienteID = request.params.id
 
-    const { tenant, id_cliente, nome, cpf, estadocivil } = request.body
+    const { tenant, nome, cpf, estadocivil } = request.body
 
     await database.update(clienteID, {
         tenant,
-        id_cliente,
         nome,
         cpf,
         estadocivil,
