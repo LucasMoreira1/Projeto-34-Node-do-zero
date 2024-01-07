@@ -56,12 +56,14 @@ GET https://advogadodigital.onrender.com/tenant
 
 ###
 
-PUT https://advogadodigital.onrender.com/login/5
+PUT https://advogadodigital.onrender.com/clientes/7
 Content-Type: application/json
 
 {
-    "nome": "Santos ferreira",
-    "email": "lmsferr@outlook.com"
+    "cpf": "31986903826",
+    "estadocivil": "solteiro",
+    "nome": "lucas santos",
+    "tenant": "1"
 }
 
 ### 

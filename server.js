@@ -146,7 +146,7 @@ server.put('/clientes/:id', async (request, reply) => {
 
     const { tenant, nome, cpf, estadocivil } = request.body
 
-    await database.update(clienteID, {
+    await database.updateCliente(clienteID, {
         tenant,
         nome,
         cpf,
