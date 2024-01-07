@@ -84,7 +84,7 @@ export class DatabasePostgres {
             throw new Error('Missing required values');
         }
 
-        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil} WHERE id_tenant = '${tenant}' AND id_cliente = '${id}`;
+        await sql`UPDATE CLIENTES SET nome = '${nome}', cpf = ${cpf}, estadocivil = ${estadocivil} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
         
     }
     
