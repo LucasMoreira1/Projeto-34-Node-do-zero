@@ -20,7 +20,7 @@
     "docxtemplater": "^3.43.1",
     "fastify": "^3.29.5",
     "fs": "^0.0.1-security",
-    "jszip": "^3.10.1",
+    "jszip": "^3.7.1",
     "pdftk": "^0.0.0-rc.0",
     "postgres": "^3.3.5"
   },
