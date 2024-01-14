@@ -17,8 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^7.0.0",
+    "docxtemplater": "^3.43.1",
     "fastify": "^3.29.5",
     "fs": "^0.0.1-security",
+    "jszip": "^2.6.1",
     "officegen": "^0.6.5",
     "postgres": "^3.3.5"
   },

@@ -2,7 +2,8 @@ import { fastify } from 'fastify'
 import fastifyCors from '@fastify/cors'
 import { DatabasePostgres } from './database-postgres.js'
 import fs from 'fs'
-import officegen from 'officegen'
+import Docxtemplater from 'docxtemplater'
+import JSZip from 'jszip'
 
 const server = fastify()
 
@@ -196,33 +197,31 @@ server.post('/gerar-docx', async (request, reply) => {
         // Obtenha os dados do cliente do corpo da solicitação
         const { clienteNome, clienteCPF } = request.body;
     
-        // Crie um novo documento Word
-        const docx = officegen('docx');
-    
-        // Defina o caminho do modelo DOCX
+        // Caminho para o modelo DOCX
         const templatePath = './src/documents/Modelo_Declaracao_Hipossuficiencia.docx';
     
         // Carregue o conteúdo do modelo DOCX
-        const templateContent = fs.readFileSync(templatePath);
+        const templateContent = fs.readFileSync(templatePath, 'binary');
     
-        // Stream do conteúdo do modelo para o documento Word
-        const templateStream = new officegen(templateContent);
-        templateStream.pipe(docx);
-    
-        // Preencha o modelo com os dados
-        docx.setData({
+        // Crie um objeto de dados para preencher o modelo
+        const data = {
           clienteNome,
           clienteCPF,
-        });
+        };
     
-        // Crie um buffer para armazenar o documento Word
-        const buffer = await new Promise((resolve, reject) => {
-          let data = [];
-          docx.on('data', chunk => data.push(chunk));
-          docx.on('end', () => resolve(Buffer.concat(data)));
-          docx.on('error', reject);
-          docx.generate();
-        });
+        // Crie um novo objeto Docxtemplater
+        const doc = new Docxtemplater();
+        const zip = new JSZip(templateContent);
+        doc.loadZip(zip);
+    
+        // Preencha o modelo com os dados
+        doc.setData(data);
+    
+        // Renderize o documento
+        doc.render();
+    
+        // Converta o documento para um buffer
+        const buffer = doc.getZip().generate({ type: 'nodebuffer' });
     
         // Defina os cabeçalhos para download
         const docDownload = `${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
