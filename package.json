@@ -17,11 +17,9 @@
   "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^7.0.0",
-    "docxtemplater": "^3.43.1",
     "fastify": "^3.29.5",
     "fs": "^0.0.1-security",
-    "jszip": "^3.7.1",
-    "pdftk": "^0.0.0-rc.0",
+    "officegen": "^0.6.5",
     "postgres": "^3.3.5"
   },
   "devDependencies": {

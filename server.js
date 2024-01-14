@@ -2,8 +2,7 @@ import { fastify } from 'fastify'
 import fastifyCors from '@fastify/cors'
 import { DatabasePostgres } from './database-postgres.js'
 import fs from 'fs'
-import Docxtemplater from 'docxtemplater'
-import JSZip from 'jszip'
+import officegen from 'officegen'
 
 const server = fastify()
 
@@ -194,43 +193,49 @@ server.delete('/clientes/:id', async (request, reply) => {
 
 server.post('/gerar-docx', async (request, reply) => {
     try {
-      // Obtenha os dados do cliente do corpo da solicitação
-      const { clienteNome, clienteCPF } = request.body;
-  
-      // Carregue o conteúdo do modelo DOCX
-      const templateContent = fs.readFileSync('./src/documents/Modelo_Declaracao_Hipossuficiencia.docx', 'binary');
-  
-      // Crie um objeto de dados para preencher o modelo
-      const data = {
-        clienteNome,
-        clienteCPF,
-      };
-  
-      // Crie um novo objeto Docxtemplater
-      const doc = new Docxtemplater();
-      doc.loadZip(new JSZip(templateContent), { createFolders: true });
-  
-      // Preencha o modelo com os dados
-      doc.setData(data);
-  
-      // Renderize o documento
-      doc.render();
-  
-      // Converta o documento para um buffer
-      const buffer = doc.getZip().generate({ type: 'nodebuffer' });
-  
-      // Defina os cabeçalhos para download
-      const docDownload = `${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
-      reply.header('Content-disposition', `attachment; filename=${docDownload}`);
-      reply.header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-  
-      // Envie o documento como resposta
-      reply.send(buffer);
-    } catch (error) {
-      console.error('Erro ao gerar o documento DOCX:', error);
-      reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
-    }
-  });
+        // Obtenha os dados do cliente do corpo da solicitação
+        const { clienteNome, clienteCPF } = request.body;
+    
+        // Crie um novo documento Word
+        const docx = officegen('docx');
+    
+        // Defina o caminho do modelo DOCX
+        const templatePath = './src/documents/Modelo_Declaracao_Hipossuficiencia.docx';
+    
+        // Carregue o conteúdo do modelo DOCX
+        const templateContent = fs.readFileSync(templatePath);
+    
+        // Stream do conteúdo do modelo para o documento Word
+        const templateStream = new officegen(templateContent);
+        templateStream.pipe(docx);
+    
+        // Preencha o modelo com os dados
+        docx.setData({
+          clienteNome,
+          clienteCPF,
+        });
+    
+        // Crie um buffer para armazenar o documento Word
+        const buffer = await new Promise((resolve, reject) => {
+          let data = [];
+          docx.on('data', chunk => data.push(chunk));
+          docx.on('end', () => resolve(Buffer.concat(data)));
+          docx.on('error', reject);
+          docx.generate();
+        });
+    
+        // Defina os cabeçalhos para download
+        const docDownload = `${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
+        reply.header('Content-disposition', `attachment; filename=${docDownload}`);
+        reply.header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    
+        // Envie o documento como resposta
+        reply.send(buffer);
+      } catch (error) {
+        console.error('Erro ao gerar o documento DOCX:', error);
+        reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
+      }
+    });
 
 ////////////////////////////////////////////////////////////////
 
