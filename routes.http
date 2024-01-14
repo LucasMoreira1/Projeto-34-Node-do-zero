@@ -44,6 +44,16 @@ Content-Type: application/json
 
 ###
 
+POST https://advogadodigital.onrender.com/gerar-docx
+Content-Type: application/json
+
+{
+    "clienteNome": "Lucas Moreira",
+    "clienteCPF": "31986903826"
+}
+
+###
+
 GET http://localhost:3333/clientes
 
 ###

@@ -1,9 +1,9 @@
 import { fastify } from 'fastify'
 import fastifyCors from '@fastify/cors'
 import { DatabasePostgres } from './database-postgres.js'
-const fs = require('fs');
-const Docxtemplater = require('docxtemplater');
-const JSZip = require('jszip');
+import fs from 'fs'
+import Docxtemplater from 'docxtemplater'
+import JSZip from 'jszip'
 
 const server = fastify()
 
@@ -190,7 +190,7 @@ server.delete('/clientes/:id', async (request, reply) => {
 
 // Gerar DOCX 
 
-server.register(require('fastify-formbody'));
+// server.register(require('fastify-formbody'));
 
 server.post('/gerar-docx', async (request, reply) => {
   try {
