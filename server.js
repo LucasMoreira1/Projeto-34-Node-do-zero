@@ -220,8 +220,8 @@ server.post('/gerar-docx', async (request, reply) => {
     const buffer = doc.getZip().generate({ type: 'nodebuffer' });
 
     // Defina os cabeçalhos para download
-    docDownload = '{clienteNome}Declaracao_Hipossuficiencia.docx'
-    reply.header('Content-disposition', 'attachment; filename=docDownload');
+    const docDownload = `${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
+    reply.header('Content-disposition', `attachment; filename=${docDownload}`);
     reply.header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 
     // Envie o documento como resposta
