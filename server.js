@@ -228,7 +228,7 @@ server.post('/gerar-docx', async (request, reply) => {
     reply.send(buffer);
   } catch (error) {
     console.error('Erro ao gerar o documento DOCX:', error);
-    reply.status(500).send({ error: 'Erro interno do servidor' });
+    reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
   }
 });
 
