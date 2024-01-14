@@ -198,7 +198,7 @@ server.post('/gerar-docx', async (request, reply) => {
     const { clienteNome, clienteCPF } = request.body;
 
     // Carregue o conteúdo do modelo DOCX
-    const templateContent = fs.readFileSync('/src/documents/Modelo_Declaracao_Hipossuficiencia.docx', 'binary');
+    const templateContent = fs.readFileSync('./src/documents/Modelo_Declaracao_Hipossuficiencia.docx', 'binary');
 
     // Crie um objeto de dados para preencher o modelo
     const data = {
