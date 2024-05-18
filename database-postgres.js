@@ -62,33 +62,33 @@ export class DatabasePostgres {
     }
 
     async criarCliente(cliente) {
-        const { tenant, nome, cpf, estadocivil, id_cliente } = cliente;
+        const { tenant, nome, cpf, estadocivil, id_cliente, profissao, rg, telefone, email, endereco_completo_com_cep } = cliente;
     
-        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
+        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || endereco_completo_com_cep === undefined) {
             throw new Error('Missing required values');
         }
     
         // Se o id_cliente for fornecido, incluí-lo na inserção
         if (id_cliente !== undefined) {
-            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil})`;
+            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${endereco_completo_com_cep})`;
         } else {
             // Caso contrário, deixar o banco de dados gerar o id_cliente automaticamente
-            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil})`;
+            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${endereco_completo_com_cep})`;
         }
     }
+    
 
     async updateCliente(id, cliente) {
-        const { tenant, nome, cpf, estadocivil } = cliente;
+        const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = cliente;
     
-        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined) {
+        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || endereco_completo_com_cep === undefined ) {
             throw new Error('Missing required values');
         }
-
-        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
-        
+    
+        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil}, profissao = ${profissao}, rg = ${rg}, telefone = ${telefone}, email = ${email}, endereco_completo_com_cep = ${endereco_completo_com_cep} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
     }
     
-
+    
     async obterNextIdCliente(tenant) {
         const nextIdResult = await sql`SELECT next_id FROM clientes_aux WHERE id_tenant = ${tenant}`;
         return nextIdResult[0];
@@ -107,18 +107,18 @@ export class DatabasePostgres {
         }
     }
     
-
     async listarCliente({ tenant, search }) {
         let clientes;
     
         if (search) {
-            clientes = await sql`select id_cliente, nome, cpf, estadocivil from CLIENTES where id_tenant = ${tenant} and nome ilike ${`%` + search + `%`}`;
+            clientes = await sql`SELECT id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`}`;
         } else {
-            clientes = await sql`select id_cliente, nome, cpf, estadocivil from CLIENTES where id_tenant = ${tenant}`;
+            clientes = await sql`SELECT id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep FROM CLIENTES WHERE id_tenant = ${tenant}`;
         }
     
         return clientes;
     }
+    
 
     async deleteCliente(id, tenant){
         await sql`delete from CLIENTES where id_cliente = ${id} and id_tenant = ${tenant}`;

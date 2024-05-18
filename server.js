@@ -99,11 +99,11 @@ server.post('/login/validacao', async (request, reply) => {
 
 // Create
 server.post('/clientes', async (request, reply) => {
-    const { tenant, nome, cpf, estadocivil } = request.body;
+    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = request.body;
 
     console.log('Received request with body:', request.body);
 
-    if (!tenant || !nome || !cpf || !estadocivil) {
+    if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
         return reply.status(400).send({ error: 'Missing required fields' });
     }
 
@@ -122,6 +122,11 @@ server.post('/clientes', async (request, reply) => {
             nome,
             cpf,
             estadocivil,
+            profissao,
+            rg,
+            telefone,
+            email,
+            endereco_completo_com_cep
         });
 
         return reply.status(201).send({ clienteID: nextId });
@@ -130,6 +135,7 @@ server.post('/clientes', async (request, reply) => {
         return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
     }
 });
+
 
 // Read
 server.get('/clientes/:tenant', async (request) => {
@@ -144,20 +150,11 @@ server.get('/clientes/:tenant', async (request) => {
 // Update
 
 server.put('/clientes/:id', async (request, reply) => {
-    const clienteID = request.params.id
+    const clienteID = request.params.id;
 
-    const { tenant, nome, cpf, estadocivil } = request.body
+    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = request.body;
 
-    // await database.updateCliente(clienteID, {
-    //     tenant,
-    //     nome,
-    //     cpf,
-    //     estadocivil,
-    // })
-
-    // return reply.status(204).send()
-
-    if (!tenant || !nome || !cpf || !estadocivil) {
+    if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
         return reply.status(400).send({ error: 'Missing required fields' });
     }
 
@@ -167,14 +164,20 @@ server.put('/clientes/:id', async (request, reply) => {
             nome,
             cpf,
             estadocivil,
-        })
+            profissao,
+            rg,
+            telefone,
+            email,
+            endereco_completo_com_cep
+        });
 
-        return reply.status(201).send()
+        return reply.status(201).send();
     } catch (error) {
         console.error('Erro durante a atualização no banco de dados:', error);
         return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
     }
-})
+});
+
 
 // Delete
 

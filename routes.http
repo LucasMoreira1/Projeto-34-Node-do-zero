@@ -1,4 +1,4 @@
-POST https://advogadodigital.onrender.com/login/validacao
+POST http://mysql-agility.advogadodigital.click:3333/login/validacao
 Content-Type: application/json
 
 {
@@ -8,7 +8,7 @@ Content-Type: application/json
 
 ### 
 
-POST https://advogadodigital.onrender.com/tenant
+POST http://mysql-agility.advogadodigital.click:3333/tenant
 Content-Type: application/json
 
 {
@@ -20,7 +20,7 @@ Content-Type: application/json
 
 ###
 
-POST http://187.95.26.193:3333/login
+POST http://mysql-agility.advogadodigital.click:3333/login
 Content-Type: application/json
 
 {
@@ -33,7 +33,7 @@ Content-Type: application/json
 
 ###
 
-POST http://187.95.26.193:3333/tenant
+POST http://mysql-agility.advogadodigital.click:3333/tenant
 Content-Type: application/json
 
 {
@@ -45,11 +45,11 @@ Content-Type: application/json
 
 ###
 
-POST https://advogadodigital.onrender.com/clientes
+POST http://mysql-agility.advogadodigital.click:3333/clientes
 Content-Type: application/json
 
 {
-    "tenant": "1",
+    "tenant": "8",
     "nome": "lucas santos",
     "cpf": "31986903826",
     "estadocivil": "solteiro"
@@ -57,7 +57,7 @@ Content-Type: application/json
 
 ###
 
-POST https://advogadodigital.onrender.com/gerar-docx
+POST http://mysql-agility.advogadodigital.click:3333/gerar-docx
 Content-Type: application/json
 
 {
@@ -67,28 +67,33 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3333/clientes
+GET http://mysql-agility.advogadodigital.click:3333/clientes
 
 ###
 
-GET https://advogadodigital.onrender.com/clientes/Lucas Advocacia
+GET http://mysql-agility.advogadodigital.click:3333/clientes/Lucas Advocacia
 
 ###
 
-GET https://advogadodigital.onrender.com/tenant
+GET http://mysql-agility.advogadodigital.click:3333/tenant
 
 ###
 
-PUT https://advogadodigital.onrender.com/clientes/11
+PUT http://mysql-agility.advogadodigital.click:3333/clientes/5
 Content-Type: application/json
 
 {
-    "cpf": "31986903826",
-    "estadocivil": "solteiro",
-    "nome": "lucas santos mo",
-    "tenant": "1"
+    "cpf": "319.869.038-26",
+    "email": "Admin@Admin.Com",
+    "endereco_completo_com_cep": "Rua AmaríLis 331",
+    "estadocivil": "Casado(a)",
+    "nome": "Lucas Moreira Santos Ferreira",
+    "profissao": "proprietario de SAAS",
+    "telefone": "(12)981559778",
+    "rg": "37.496.981-4",
+    "tenant": 8
 }
 
 ### 
 
-DELETE https://advogadodigital.onrender.com/login/lucas_moreira@outlook.com
+DELETE http://mysql-agility.advogadodigital.click:3333/login/lucas_moreira@outlook.com
