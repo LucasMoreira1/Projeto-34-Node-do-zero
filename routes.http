@@ -50,9 +50,20 @@ Content-Type: application/json
 
 {
     "tenant": "8",
-    "nome": "lucas santos",
-    "cpf": "31986903826",
-    "estadocivil": "solteiro"
+    "nome": "lucas moreira",
+    "cpf": "319.869.038-26",
+    "estadocivil": "Solteiro(a)",
+    "profissao": "programador",
+    "rg": "37.496.981-4",
+    "telefone": "(12)99732-9778",
+    "email": "lucas@moreira.com",
+    "cep": "12306390",
+    "rua": "Rua das Amarilis",
+    "numero": "331",
+    "complemento": "",
+    "bairro": "Jardim Primavera",
+    "cidade": "Jacareí",
+    "estado": "SP"
 }
 
 ###
@@ -67,7 +78,7 @@ Content-Type: application/json
 
 ###
 
-GET http://mysql-agility.advogadodigital.click:3333/clientes
+GET http://mysql-agility.advogadodigital.click:3333/clientes/8
 
 ###
 

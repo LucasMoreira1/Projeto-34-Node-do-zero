@@ -17,14 +17,11 @@ export class DatabasePostgres {
         return novoTenantId;
     }
     
-
     async verificarEmailTenant(email) {
         const emailLowerCase = email.toLowerCase(); // Converter para minúsculas
         const resultado = await sql`SELECT EXISTS (SELECT 1 FROM tenant WHERE email = ${emailLowerCase})`;
         return resultado[0].exists;
     }
-
-     
 
     // Login
 
@@ -62,32 +59,28 @@ export class DatabasePostgres {
     }
 
     async criarCliente(cliente) {
-        const { tenant, nome, cpf, estadocivil, id_cliente, profissao, rg, telefone, email, endereco_completo_com_cep } = cliente;
+        const { tenant, nome, cpf, estadocivil, id_cliente, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = cliente;
     
-        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || endereco_completo_com_cep === undefined) {
+        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || cep === undefined || rua === undefined || numero === undefined || complemento === undefined || bairro === undefined || cidade === undefined || estado === undefined) {
             throw new Error('Missing required values');
         }
     
-        // Se o id_cliente for fornecido, incluí-lo na inserção
         if (id_cliente !== undefined) {
-            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${endereco_completo_com_cep})`;
+            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${cep}, ${rua}, ${numero}, ${complemento}, ${bairro}, ${cidade}, ${estado})`;
         } else {
-            // Caso contrário, deixar o banco de dados gerar o id_cliente automaticamente
-            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${endereco_completo_com_cep})`;
+            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${cep}, ${rua}, ${numero}, ${complemento}, ${bairro}, ${cidade}, ${estado})`;
         }
     }
     
-
     async updateCliente(id, cliente) {
-        const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = cliente;
+        const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = cliente;
     
-        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || endereco_completo_com_cep === undefined ) {
+        if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || cep === undefined || rua === undefined || numero === undefined || complemento === undefined || bairro === undefined || cidade === undefined || estado === undefined) {
             throw new Error('Missing required values');
         }
     
-        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil}, profissao = ${profissao}, rg = ${rg}, telefone = ${telefone}, email = ${email}, endereco_completo_com_cep = ${endereco_completo_com_cep} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
+        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil}, profissao = ${profissao}, rg = ${rg}, telefone = ${telefone}, email = ${email}, cep = ${cep}, rua = ${rua}, numero = ${numero}, complemento = ${complemento}, bairro = ${bairro}, cidade = ${cidade}, estado = ${estado} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
     }
-    
     
     async obterNextIdCliente(tenant) {
         const nextIdResult = await sql`SELECT next_id FROM clientes_aux WHERE id_tenant = ${tenant}`;
@@ -111,18 +104,88 @@ export class DatabasePostgres {
         let clientes;
     
         if (search) {
-            clientes = await sql`SELECT id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`}`;
+            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`}`;
         } else {
-            clientes = await sql`SELECT id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep FROM CLIENTES WHERE id_tenant = ${tenant}`;
+            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant}`;
         }
     
         return clientes;
-    }
+    }    
     
-
     async deleteCliente(id, tenant){
         await sql`delete from CLIENTES where id_cliente = ${id} and id_tenant = ${tenant}`;
     }
+
+    // Fim clientes
+
+    // Reus
+
+    async verificarCPFCNPJExistente(cpfcnpj) {
+        const resultado = await sql`SELECT EXISTS (SELECT 1 FROM reus WHERE cpfcnpj = ${cpfcnpj})`;
+        return resultado[0].exists;
+    }
+
+    async criarReu(reu) {
+        const { tenant, nome, cpfcnpj, estadocivil, id_reu, profissao, rg, telefone, email, endereco_completo_com_cep } = reu;
+    
+        if (tenant === undefined || nome === undefined || cpfcnpj === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || endereco_completo_com_cep === undefined) {
+            throw new Error('Missing required values');
+        }
+    
+        // Se o id_reu for fornecido, incluí-lo na inserção
+        if (id_reu !== undefined) {
+            await sql`INSERT INTO REUS (id_tenant, id_reu, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep) VALUES (${tenant}, ${id_reu}, ${nome}, ${cpfcnpj}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${endereco_completo_com_cep})`;
+        } else {
+            // Caso contrário, deixar o banco de dados gerar o id_reu automaticamente
+            await sql`INSERT INTO REUS (id_tenant, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep) VALUES (${tenant}, ${nome}, ${cpfcnpj}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${endereco_completo_com_cep})`;
+        }
+    }
+    
+    async updateReu(id, reu) {
+        const { tenant, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = reu;
+    
+        if (tenant === undefined || nome === undefined || cpfcnpj === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || endereco_completo_com_cep === undefined ) {
+            throw new Error('Missing required values');
+        }
+    
+        await sql`UPDATE REUS SET nome = ${nome}, cpfcnpj = ${cpfcnpj}, estadocivil = ${estadocivil}, profissao = ${profissao}, rg = ${rg}, telefone = ${telefone}, email = ${email}, endereco_completo_com_cep = ${endereco_completo_com_cep} WHERE id_tenant = ${tenant} AND id_reu = ${id}`;
+    }
+    
+    async obterNextIdReus(tenant) {
+        const nextIdResult = await sql`SELECT next_id FROM reus_aux WHERE id_tenant = ${tenant}`;
+        return nextIdResult[0];
+    }
+
+    async atualizarProximoIDReusAux(tenant) {
+        // Verificar se há uma linha correspondente ao tenant na tabela reus_aux
+        const existente = await sql`SELECT 1 FROM reus_aux WHERE id_tenant = ${tenant}`;
+    
+        if (existente.length === 0) {
+            // Se não existir, criar uma nova linha com next_id igual a 1
+            await sql`INSERT INTO reus_aux (id_tenant, next_id) VALUES (${tenant}, 1)`;
+        } else {
+            // Se já existir, atualizar o próximo ID
+            await sql`UPDATE reus_aux SET next_id = next_id + 1 WHERE id_tenant = ${tenant}`;
+        }
+    }
+    
+    async listarReus({ tenant, search }) {
+        let reus;
+    
+        if (search) {
+            reus = await sql`SELECT id_reu, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep FROM REUS WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`}`;
+        } else {
+            reus = await sql`SELECT id_reu, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep FROM REUS WHERE id_tenant = ${tenant}`;
+        }
+    
+        return reus;
+    }
+    
+    async deleteReu(id, tenant){
+        await sql`delete from REUS where id_reu = ${id} and id_tenant = ${tenant}`;
+    }
+
+    // Fim reu
 
     async obterSenha(email) {
         const emailLowerCase = email.toLowerCase(); // Converter para minúsculas

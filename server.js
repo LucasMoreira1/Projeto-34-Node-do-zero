@@ -99,11 +99,11 @@ server.post('/login/validacao', async (request, reply) => {
 
 // Create
 server.post('/clientes', async (request, reply) => {
-    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = request.body;
+    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = request.body;
 
     console.log('Received request with body:', request.body);
 
-    if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
+    if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !cep || !rua || !numero || !bairro || !cidade || !estado) {
         return reply.status(400).send({ error: 'Missing required fields' });
     }
 
@@ -126,7 +126,13 @@ server.post('/clientes', async (request, reply) => {
             rg,
             telefone,
             email,
-            endereco_completo_com_cep
+            cep,
+            rua,
+            numero,
+            complemento,
+            bairro,
+            cidade,
+            estado
         });
 
         return reply.status(201).send({ clienteID: nextId });
@@ -135,7 +141,6 @@ server.post('/clientes', async (request, reply) => {
         return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
     }
 });
-
 
 // Read
 server.get('/clientes/:tenant', async (request) => {
@@ -148,13 +153,12 @@ server.get('/clientes/:tenant', async (request) => {
 });
 
 // Update
-
 server.put('/clientes/:id', async (request, reply) => {
     const clienteID = request.params.id;
 
-    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = request.body;
+    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = request.body;
 
-    if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
+    if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !cep || !rua || !numero || !complemento || !bairro || !cidade || !estado) {
         return reply.status(400).send({ error: 'Missing required fields' });
     }
 
@@ -163,6 +167,106 @@ server.put('/clientes/:id', async (request, reply) => {
             tenant,
             nome,
             cpf,
+            estadocivil,
+            profissao,
+            rg,
+            telefone,
+            email,
+            cep,
+            rua,
+            numero,
+            complemento,
+            bairro,
+            cidade,
+            estado
+        });
+
+        return reply.status(201).send();
+    } catch (error) {
+        console.error('Erro durante a atualização no banco de dados:', error);
+        return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
+    }
+});
+
+// Delete
+server.delete('/clientes/:id', async (request, reply) => {
+    
+    const clienteID = request.params.id
+    const { tenant } = request.body
+
+    await database.deleteCliente(clienteID, tenant)
+
+    return reply.status(204).send()
+})
+
+// FIM CLIENTES
+
+// REUS
+
+// Create
+server.post('/reus', async (request, reply) => {
+    const { tenant, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = request.body;
+
+    console.log('Received request with body:', request.body);
+
+    if (!tenant || !nome || !cpfcnpj || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
+        return reply.status(400).send({ error: 'Missing required fields' });
+    }
+
+    try {
+        // Atualizar próximo ID na tabela reus_aux
+        await database.atualizarProximoIDReusAux(tenant);
+
+        // Obtém o próximo ID para o tenant da tabela reus_aux
+        const nextIdResult = await database.obterNextIdReus(tenant);
+        const nextId = nextIdResult.next_id;
+
+        // Cria o reu com o próximo ID
+        await database.criarReu({
+            tenant,
+            id_reu: nextId,
+            nome,
+            cpfcnpj,
+            estadocivil,
+            profissao,
+            rg,
+            telefone,
+            email,
+            endereco_completo_com_cep
+        });
+
+        return reply.status(201).send({ reuID: nextId });
+    } catch (error) {
+        console.error('Erro durante a criação no banco de dados:', error);
+        return reply.status(500).send({ error: 'Erro interno do servidor', details: error.message });
+    }
+});
+
+// Read
+server.get('/reus/:tenant', async (request) => {
+    const { search } = request.query;
+    const { tenant } = request.params;
+
+    const reus = await database.listarReus({ tenant, search });
+
+    return reus;
+});
+
+// Update
+server.put('/reus/:id', async (request, reply) => {
+    const reusID = request.params.id;
+
+    const { tenant, nome, cpfcnpj, estadocivil, profissao, rg, telefone, email, endereco_completo_com_cep } = request.body;
+
+    if (!tenant || !nome || !cpfcnpj || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
+        return reply.status(400).send({ error: 'Missing required fields' });
+    }
+
+    try {
+        await database.updateReus(reusID, {
+            tenant,
+            nome,
+            cpfcnpj,
             estadocivil,
             profissao,
             rg,
@@ -178,18 +282,18 @@ server.put('/clientes/:id', async (request, reply) => {
     }
 });
 
-
 // Delete
-
-server.delete('/clientes/:id', async (request, reply) => {
+server.delete('/reus/:id', async (request, reply) => {
     
-    const clienteID = request.params.id
+    const reuID = request.params.id
     const { tenant } = request.body
 
-    await database.deleteCliente(clienteID, tenant)
+    await database.deleteReu(reuID, tenant)
 
     return reply.status(204).send()
 })
+
+// FIM REUS
 
 // Gerar DOCX 
 
