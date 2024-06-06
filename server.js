@@ -73,25 +73,33 @@ server.get('/login/:email', async (request) => {
 server.post('/login/validacao', async (request, reply) => {
     const { email, senha } = request.body;
 
-    // Verificar se o email existe no banco de dados
-    const emailExistente = await database.verificarEmailLogin(email.toLowerCase());
+    try {
+        // Verificar se o email existe no banco de dados
+        const emailExistente = await database.verificarEmailLogin(email.toLowerCase());
 
-    if (emailExistente) {
-        // Obter informações do usuário do banco de dados
-        const userInfo = await database.obterInformacoesUsuario(email.toLowerCase());
+        if (emailExistente) {
+            // Obter informações do usuário do banco de dados
+            const userInfo = await database.obterInformacoesUsuario(email.toLowerCase());
 
-        // Obter a senha armazenada no banco de dados
-        const senhaArmazenada = await database.obterSenha(email.toLowerCase());
+            // Obter a senha armazenada no banco de dados
+            const senhaArmazenada = await database.obterSenha(email.toLowerCase());
 
-        // Comparar a senha fornecida com a senha armazenada no banco de dados
-        if (senha === senhaArmazenada) {
-            // Credenciais válidas, incluir informações do usuário na resposta
-            reply.status(200).send({ message: 'Credenciais válidas', userInfo });
+            // Comparar a senha fornecida com a senha armazenada no banco de dados
+            if (senha === senhaArmazenada) {
+                // Obter informações do Tenant com base no id_tenant do usuário
+                const tenantInfo = await database.obterTenantPorId(userInfo.id_tenant);
+
+                // Credenciais válidas, incluir informações do usuário e do Tenant na resposta
+                reply.status(200).send({ message: 'Credenciais válidas', userInfo, tenantInfo });
+            } else {
+                reply.status(401).send({ message: 'Credenciais inválidas' });
+            }
         } else {
-            reply.status(401).send({ message: 'Credenciais inválidas' });
+            reply.status(401).send({ message: 'Email não cadastrado' });
         }
-    } else {
-        reply.status(401).send({ message: 'Email não cadastrado' });
+    } catch (error) {
+        console.error('Erro ao validar login:', error);
+        reply.status(500).send({ message: 'Erro interno do servidor', details: error.message });
     }
 });
 
@@ -99,12 +107,12 @@ server.post('/login/validacao', async (request, reply) => {
 
 // Create
 server.post('/clientes', async (request, reply) => {
-    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = request.body;
+    const { tenant, nome, cpf, estadocivil, profissao, rg, orgemissor, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = request.body;
 
     console.log('Received request with body:', request.body);
 
     if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !cep || !rua || !numero || !bairro || !cidade || !estado) {
-        return reply.status(400).send({ error: 'Missing required fields' });
+        return reply.status(400).send({ error: 'Faltando campos obrigatórios' });
     }
 
     try {
@@ -124,6 +132,7 @@ server.post('/clientes', async (request, reply) => {
             estadocivil,
             profissao,
             rg,
+            orgemissor,
             telefone,
             email,
             cep,
@@ -156,7 +165,7 @@ server.get('/clientes/:tenant', async (request) => {
 server.put('/clientes/:id', async (request, reply) => {
     const clienteID = request.params.id;
 
-    const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = request.body;
+    const { tenant, nome, cpf, estadocivil, profissao, rg, orgemissor, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = request.body;
 
     if (!tenant || !nome || !cpf || !estadocivil || !profissao || !rg || !telefone || !email || !cep || !rua || !numero || !complemento || !bairro || !cidade || !estado) {
         return reply.status(400).send({ error: 'Missing required fields' });
@@ -170,6 +179,7 @@ server.put('/clientes/:id', async (request, reply) => {
             estadocivil,
             profissao,
             rg,
+            orgemissor,
             telefone,
             email,
             cep,
@@ -210,7 +220,7 @@ server.post('/reus', async (request, reply) => {
     console.log('Received request with body:', request.body);
 
     if (!tenant || !nome || !cpfcnpj || !estadocivil || !profissao || !rg || !telefone || !email || !endereco_completo_com_cep) {
-        return reply.status(400).send({ error: 'Missing required fields' });
+        return reply.status(400).send({ error: 'Faltando campos obrigatórios' });
     }
 
     try {
@@ -302,7 +312,33 @@ server.delete('/reus/:id', async (request, reply) => {
 server.post('/gerar-docx', async (request, reply) => {
     try {
         // Obtenha os dados do cliente do corpo da solicitação
-        const { clienteNome, clienteCPF } = request.body;
+        const {
+            clienteID,
+            clienteNome,
+            clienteCPF,
+            clienteEstadoCivil,
+            clienteProfissao,
+            clienteRG,
+            clienteOrgEmissor,
+            clienteTelefone,
+            clienteEmail,
+            clienteCEP,
+            clienteRua,
+            clienteNumero,
+            clienteComplemento,
+            clienteBairro,
+            clienteCidade,
+            clienteEstado,
+            tenantCidade,
+            tenantEstado
+        } = request.body;
+
+        // Obtenha a data atual
+        const Data = new Date().toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
     
         // Caminho para o modelo DOCX
         const templatePath = './src/documents/Modelo_Declaracao_Hipossuficiencia.docx';
@@ -312,14 +348,36 @@ server.post('/gerar-docx', async (request, reply) => {
     
         // Crie um objeto de dados para preencher o modelo
         const data = {
-          clienteNome,
-          clienteCPF,
+            clienteID,
+            clienteNome,
+            clienteCPF,
+            clienteEstadoCivil,
+            clienteProfissao,
+            clienteRG,
+            clienteOrgEmissor,
+            clienteTelefone,
+            clienteEmail,
+            clienteCEP,
+            clienteRua,
+            clienteNumero,
+            clienteComplemento,
+            clienteBairro,
+            clienteCidade,
+            clienteEstado,
+            tenantCidade,
+            tenantEstado,
+            Data 
         };
     
         // Crie um novo objeto Docxtemplater
-        const doc = new Docxtemplater();
         const zip = new JSZip(templateContent);
-        doc.loadZip(zip);
+        const doc = new Docxtemplater(zip, {
+            parser: tag => ({
+                get(scope, context) {
+                    return scope[tag] || tag;
+                }
+            })
+        });
     
         // Preencha o modelo com os dados
         doc.setData(data);
@@ -331,7 +389,7 @@ server.post('/gerar-docx', async (request, reply) => {
         const buffer = doc.getZip().generate({ type: 'nodebuffer' });
     
         // Defina os cabeçalhos para download
-        const docDownload = `${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
+        const docDownload = `${clienteID}_${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
         reply.header('Content-disposition', `attachment; filename=${docDownload}`);
         reply.header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     

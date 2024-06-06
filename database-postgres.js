@@ -51,6 +51,11 @@ export class DatabasePostgres {
         return senha[0].senha;
     }
 
+    async obterTenantPorId(id_tenant){
+        const tenantInfo = await sql`SELECT * FROM tenant WHERE id_tenant = ${id_tenant}`;
+        return tenantInfo[0];
+    }
+
     // Clientes
 
     async verificarCPFExistente(cpf) {
@@ -59,27 +64,27 @@ export class DatabasePostgres {
     }
 
     async criarCliente(cliente) {
-        const { tenant, nome, cpf, estadocivil, id_cliente, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = cliente;
+        const { tenant, nome, cpf, estadocivil, id_cliente, profissao, rg, orgemissor, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = cliente;
     
         if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || cep === undefined || rua === undefined || numero === undefined || complemento === undefined || bairro === undefined || cidade === undefined || estado === undefined) {
             throw new Error('Missing required values');
         }
     
         if (id_cliente !== undefined) {
-            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${cep}, ${rua}, ${numero}, ${complemento}, ${bairro}, ${cidade}, ${estado})`;
+            await sql`INSERT INTO CLIENTES (id_tenant, id_cliente, nome, cpf, estadocivil, profissao, rg, orgemissor, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado) VALUES (${tenant}, ${id_cliente}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${orgemissor}, ${telefone}, ${email}, ${cep}, ${rua}, ${numero}, ${complemento}, ${bairro}, ${cidade}, ${estado})`;
         } else {
-            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${telefone}, ${email}, ${cep}, ${rua}, ${numero}, ${complemento}, ${bairro}, ${cidade}, ${estado})`;
+            await sql`INSERT INTO CLIENTES (id_tenant, nome, cpf, estadocivil, profissao, rg, orgemissor, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado) VALUES (${tenant}, ${nome}, ${cpf}, ${estadocivil}, ${profissao}, ${rg}, ${orgemissor}, ${telefone}, ${email}, ${cep}, ${rua}, ${numero}, ${complemento}, ${bairro}, ${cidade}, ${estado})`;
         }
     }
     
     async updateCliente(id, cliente) {
-        const { tenant, nome, cpf, estadocivil, profissao, rg, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = cliente;
+        const { tenant, nome, cpf, estadocivil, profissao, rg, orgemissor, telefone, email, cep, rua, numero, complemento, bairro, cidade, estado } = cliente;
     
         if (tenant === undefined || nome === undefined || cpf === undefined || estadocivil === undefined || profissao === undefined || rg === undefined || telefone === undefined || email === undefined || cep === undefined || rua === undefined || numero === undefined || complemento === undefined || bairro === undefined || cidade === undefined || estado === undefined) {
             throw new Error('Missing required values');
         }
     
-        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil}, profissao = ${profissao}, rg = ${rg}, telefone = ${telefone}, email = ${email}, cep = ${cep}, rua = ${rua}, numero = ${numero}, complemento = ${complemento}, bairro = ${bairro}, cidade = ${cidade}, estado = ${estado} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
+        await sql`UPDATE CLIENTES SET nome = ${nome}, cpf = ${cpf}, estadocivil = ${estadocivil}, profissao = ${profissao}, rg = ${rg}, orgemissor = ${orgemissor}, telefone = ${telefone}, email = ${email}, cep = ${cep}, rua = ${rua}, numero = ${numero}, complemento = ${complemento}, bairro = ${bairro}, cidade = ${cidade}, estado = ${estado} WHERE id_tenant = ${tenant} AND id_cliente = ${id}`;
     }
     
     async obterNextIdCliente(tenant) {
@@ -104,9 +109,9 @@ export class DatabasePostgres {
         let clientes;
     
         if (search) {
-            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`}`;
+            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, orgemissor, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`} ORDER BY id_cliente ASC`;
         } else {
-            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant}`;
+            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, orgemissor, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} ORDER BY id_cliente ASC`;
         }
     
         return clientes;
