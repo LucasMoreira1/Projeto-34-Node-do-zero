@@ -330,7 +330,10 @@ server.post('/gerar-docx', async (request, reply) => {
             clienteCidade,
             clienteEstado,
             tenantCidade,
-            tenantEstado
+            tenantEstado,
+            tenantResponsavel,
+            tenantEmail,
+            tipoDocumento
         } = request.body;
 
         // Obtenha a data atual
@@ -341,8 +344,28 @@ server.post('/gerar-docx', async (request, reply) => {
         });
     
         // Caminho para o modelo DOCX
-        const templatePath = './src/documents/Modelo_Declaracao_Hipossuficiencia.docx';
-    
+        let templatePath;
+        let docDownload;
+        switch (tipoDocumento) {
+            case '1':
+                templatePath = './src/documents/Modelo_Contrato_Honorarios_Advocaticios.docx';
+                docDownload = `${clienteID}_${clienteNome}_Contrato_Honorarios_Advocaticios.docx`;
+                break;
+            case '2':
+                templatePath = './src/documents/Modelo_Declaracao_Hipossuficiencia.docx';
+                docDownload = `${clienteID}_${clienteNome}_Declaracao_Hipossuficiencia.docx`;
+                break;
+            case '3':
+                templatePath = './src/documents/Modelo_Manifesto.docx';
+                docDownload = `${clienteID}_${clienteNome}_Manifesto.docx`;
+                break;
+            case '4':
+                templatePath = './src/documents/Modelo_Procuracao.docx';
+                docDownload = `${clienteID}_${clienteNome}_Procuracao.docx`;
+                break;
+            default:
+                throw new Error('Tipo de documento inválido');
+        }
         // Carregue o conteúdo do modelo DOCX
         const templateContent = fs.readFileSync(templatePath, 'binary');
     
@@ -366,6 +389,8 @@ server.post('/gerar-docx', async (request, reply) => {
             clienteEstado,
             tenantCidade,
             tenantEstado,
+            tenantResponsavel,
+            tenantEmail,
             Data 
         };
     
@@ -389,7 +414,6 @@ server.post('/gerar-docx', async (request, reply) => {
         const buffer = doc.getZip().generate({ type: 'nodebuffer' });
     
         // Defina os cabeçalhos para download
-        const docDownload = `${clienteID}_${clienteNome}_Declaracao_Hipossuficiencia.docx`; // Nome do arquivo com base nos dados do cliente
         reply.header('Content-disposition', `attachment; filename=${docDownload}`);
         reply.header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
     
