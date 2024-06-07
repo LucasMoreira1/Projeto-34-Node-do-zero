@@ -107,15 +107,18 @@ export class DatabasePostgres {
     
     async listarCliente({ tenant, search }) {
         let clientes;
-    
+        
         if (search) {
-            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, orgemissor, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${`%` + search + `%`} ORDER BY id_cliente ASC`;
+            clientes = await sql`
+                SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, orgemissor, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} AND nome ILIKE ${'%' + search + '%'} ORDER BY id_cliente ASC`;
         } else {
-            clientes = await sql`SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, orgemissor, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} ORDER BY id_cliente ASC`;
+            clientes = await sql`
+                SELECT id_cliente, nome, profissao, estadocivil, telefone, rg, orgemissor, cpf, email, cep, rua, numero, complemento, bairro, cidade, estado FROM CLIENTES WHERE id_tenant = ${tenant} ORDER BY id_cliente ASC`;
         }
-    
+        
         return clientes;
-    }    
+    }
+        
     
     async deleteCliente(id, tenant){
         await sql`delete from CLIENTES where id_cliente = ${id} and id_tenant = ${tenant}`;

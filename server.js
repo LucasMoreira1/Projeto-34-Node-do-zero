@@ -152,13 +152,17 @@ server.post('/clientes', async (request, reply) => {
 });
 
 // Read
-server.get('/clientes/:tenant', async (request) => {
+server.get('/clientes/:tenant', async (request, reply) => {
     const { search } = request.query;
     const { tenant } = request.params;
 
-    const clientes = await database.listarCliente({ tenant, search });
-
-    return clientes;
+    try {
+        const clientes = await database.listarCliente({ tenant, search });
+        reply.send(clientes);
+    } catch (error) {
+        console.error('Erro ao listar clientes:', error);
+        reply.status(500).send({ error: 'Erro ao listar clientes' });
+    }
 });
 
 // Update
