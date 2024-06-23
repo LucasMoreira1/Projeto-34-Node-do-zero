@@ -437,7 +437,6 @@ server.post('/gerar-docx', async (request, reply) => {
       }
     });
 
-
 //
 // Whatsapp
 //
@@ -463,7 +462,7 @@ server.post('/webhook', async (request, reply) => {
                 {
                     role: "user",
                     // parts: [{ text: ``}],
-                    parts: [{ text: `Seu nome será Ratatuile e é um assistente virtual para atendimento da PestClean. Na introdução, sempre informar o nome da pessoa, se houver. Preciso que seja bem amigável e use emojis na conversa, sem exagerar. É uma empresa de dedetização. Seus principais serviços são desratização, dedetização, descupinização e desalojamento de pombos. Também presta serviços como limpeza de caixa d'agua, caixa de gordura, pintura de caixa d'agua entre outros. Para mais informações e orçamentos entrar em contato com o Bruno Moreira (12) 98147-4513. Seu endereço é Av. Bruno Decária, 277 - Jardim Santa Maria, Jacareí - SP.` }],
+                    parts: [{ text: `Seu nome será Stella e é uma assistente virtual para atendimento do sistema SAAS Advogado Digital. Na introdução, sempre informar o nome da pessoa, se houver. Preciso que seja bem amigável e use emojis na conversa, sem exagerar. O valor da mensalidade é de R$79,00 e se for necessário mais informações, solicite que entre em contato com o Lucas Moreira (12)98155-9778.` }],
                 }
             ];
         }
@@ -543,6 +542,47 @@ Checkout README.md to start.</pre>`)
 })
 
 //
+// CHAT
+//
+
+server.post('/chat', async (request, reply) => {
+    const { message, userName } = request.body;
+    const userId = request.ip; // Use IP as a unique identifier for the user or generate a unique user ID
+
+    // Adiciona histórico de conversa se não existir
+    if (!chatHistory[userId]) {
+        chatHistory[userId] = [
+            {
+                role: "user",
+                parts: [{ text: `Seu nome será Stella e é uma assistente virtual para atendimento do sistema SAAS Advogado Digital. Na introdução, sempre informar o nome da pessoa, se houver. Preciso que seja bem amigável e use emojis na conversa, sem exagerar. O valor da mensalidade é de R$79,00 e se for necessário mais informações, solicite que entre em contato com o Lucas Moreira (12)98155-9778.` }],
+            }
+        ];
+    }
+
+    // Adiciona a mensagem recebida ao histórico
+    chatHistory[userId].push({
+        role: "user",
+        parts: [{ text: message }],
+    });
+
+    // Integração com a função resposta_gemini
+    try {
+        const geminiResponse = await resposta_gemini(chatHistory[userId], userName, userId);
+
+        // Adiciona a resposta de Gemini ao histórico
+        chatHistory[userId].push({
+            role: "model",
+            parts: [{ text: geminiResponse }],
+        });
+
+        reply.send({ response: geminiResponse });
+    } catch (error) {
+        console.error('Erro ao processar a mensagem:', error);
+        reply.code(500).send({ error: 'Failed to get response from Gemini' });
+    }
+});
+
+//
 // GEMINI
 //
 
@@ -573,9 +613,6 @@ async function resposta_gemini(history, senderName, fromNumber) {
         const chat = model.startChat({ history });
 
         const result = await chat.sendMessage(history[history.length - 1].parts[0].text);
-
-        // Utiliza a mensagem recebida como prompt para a geração de conteúdo
-        // const result = await model.generateContent(prompt);
         
         // Extrai a resposta do resultado da geração de conteúdo
         const response = await result.response;
