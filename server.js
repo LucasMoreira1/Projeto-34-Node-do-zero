@@ -9,6 +9,7 @@ import axios from 'axios'
 import formbody from '@fastify/formbody' // Importação do plugin
 // const { GoogleGenerativeAI } = require("@google/generative-ai");
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import ServerlessHttp from 'serverless-http'
 
 const server = fastify()
 
@@ -24,6 +25,10 @@ server.register(formbody) // Registro do plugin formbody separadamente
 const database = new DatabasePostgres()
 
 // Tenant do sistema. (Criar escritorios)
+
+server.get('/hello', async (request, reply) => {
+    reply.send("Hello World");
+});
 
 server.post('/tenant', async (request, reply) => {
     const { nome, responsavel, email, telefone } = request.body;
@@ -633,13 +638,15 @@ async function resposta_gemini(history, senderName, fromNumber) {
 
 ////////////////////////////////////
 
-server.listen({
-    host: '0.0.0.0',
-    port: process.env.PORT ?? 3333,
-}, (err, address) => {
-    if (err) {
-        console.error(err)
-        process.exit(1)
-    }
-    console.log(`Server is listening on ${address}`)
-})
+// server.listen({
+//     host: '0.0.0.0',
+//     port: process.env.PORT ?? 3333,
+// }, (err, address) => {
+//     if (err) {
+//         console.error(err)
+//         process.exit(1)
+//     }
+//     console.log(`Server is listening on ${address}`)
+// })
+
+module.exports.handler = ServerlessHttp(server)
