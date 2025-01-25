@@ -24,11 +24,10 @@
     "fs": "^0.0.1-security",
     "jszip": "^2.6.1",
     "officegen": "^0.6.5",
-    "postgres": "^3.3.5",
-    "serverless-http": "^3.2.0"
+    "postgres": "^3.3.5"
   },
   "devDependencies": {
     "dotenv": "^16.3.1",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.0"
   }
 }
